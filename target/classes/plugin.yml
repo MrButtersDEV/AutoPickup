@@ -4,7 +4,7 @@ main: us.thezircon.play.autopickup.AutoPickup
 prefix: AutoPickup
 authors: [BUTTERFIELD8]
 description: Automatically pickup broken blocks.
-website: discord.com
+website: https://discord.gg/ncHH4FP
 api-version: 1.16
 commands:
   autopickup:
