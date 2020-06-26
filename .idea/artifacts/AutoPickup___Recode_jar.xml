@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="AutoPickup - Recode:jar">
+    <output-path>D:/Minecraft/Server Stuff/Servers/Plugin Test v2 - 1.15.2/plugins</output-path>
+    <root id="archive" name="AutoPickup - Recode.jar">
+      <element id="module-output" name="AutoPickup - Recode" />
+    </root>
+  </artifact>
+</component>

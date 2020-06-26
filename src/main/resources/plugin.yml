@@ -1,0 +1,15 @@
+name: AutoPickup
+version: ${project.version}
+main: us.thezircon.play.autopickup.AutoPickup
+prefix: AutoPickup
+authors: [BUTTERFIELD8]
+description: Automatically pickup broken blocks.
+website: https://discord.gg/ncHH4FP
+api-version: 1.16
+commands:
+  autopickup:
+    description: Toggles the ability to automaticly pickup blocks when you mine them.
+    aliases: [auto, pickup]
+permissions:
+  autopickup.pickup.mined.autoenabled:
+    default: false

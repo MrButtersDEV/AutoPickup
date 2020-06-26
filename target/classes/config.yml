@@ -1,0 +1,41 @@
+#############################################################################################################
+#                          _             _____    _          _                                              #
+#          /\             | |           |  __ \  (_)        | |                                             #
+#         /  \     _   _  | |_    ___   | |__) |  _    ___  | | __  _   _   _ __                            #
+#        / /\ \   | | | | | __|  / _ \  |  ___/  | |  / __| | |/ / | | | | | '_ \                           #
+#       / ____ \  | |_| | | |_  | (_) | | |      | | | (__  |   <  | |_| | | |_) |                          #
+#      /_/    \_\  \__,_|  \__|  \___/  |_|      |_|  \___| |_|\_\  \__,_| | .__/                           #
+#                                                                          | |                              #
+#                                                                          |_|                              #
+#############################################################################################################
+# By: BUTTERFIELD8 & The Zircon Network                                                                     #
+# Discord: https://discord.gg/ncHH4FP                                                                       #
+#############################################################################################################
+
+#Message Prefix
+msgPrefix: "&8[&5Auto&d&oPickup&8]"
+
+#Toggle Message - /auto
+msgAutoPickupEnable: "&7You have&a enabled &7auto pickup."
+msgAutoPickupDisable: "&7You have&c disabled &7auto pickup."
+
+#Aditional toggling messages
+msgAutoEnable: "&7Auto pickup has been automatically&a enabled&7."
+doAutoEnableMSG: true
+msgEnabledJoinMSG: "&7Auto pickup has been automatically&a enabled&7."
+doEnabledOnJoinMSG: true
+
+#reload Config Message
+msgReload: "&cReloaded Config"
+
+#Fully Inventory Message
+msgFullInv: "&7Your inventory is full!"
+doFullInvMSG: true
+
+#Plase does not have permission
+msgNoperms: "&cYou don't have permission to use this command"
+
+#Require Permissions | Do players require permission to run commands?
+requirePerms:
+  autopickup: true
+  auto-reload: true
