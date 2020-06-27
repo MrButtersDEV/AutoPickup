@@ -2,13 +2,18 @@ package us.thezircon.play.autopickup.listeners;
 
 import org.bukkit.Location;
 import org.bukkit.block.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.utils.Mendable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +31,28 @@ public class BlockBreakEventListener implements Listener {
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
 
-        if (block.getState() instanceof ShulkerBox) {
-            return;
-        }
+        // Mend Items & Give Player XP
+        int xp = e.getExpToDrop();
+        player.giveExp(xp); // Give player XP
 
+        // Mend
+        mend(player.getInventory().getItemInMainHand(), xp);
+        mend(player.getInventory().getItemInOffHand(), xp);
+        ItemStack armor[] = player.getInventory().getArmorContents();
+        for (ItemStack i : armor)
+        {
+            try {
+                mend(i, xp);
+            } catch (NullPointerException ignored) {}
+        }
+        e.setExpToDrop(0); // Remove default XP
+
+        // Deal with Containers
         if (block.getState() instanceof Container) {
+
+            if (block.getState() instanceof ShulkerBox) {
+                return;
+            }
 
             e.setDropItems(false); // Cancel drops
 
@@ -83,6 +105,45 @@ public class BlockBreakEventListener implements Listener {
             }
 
         }
+    }
+
+    private static int mend(ItemStack item, int xp) {
+
+        if (item.containsEnchantment(Enchantment.MENDING)) {
+            ItemMeta meta = item.getItemMeta();
+            Mendable mend[] = Mendable.values();
+            for (Mendable m : mend) {
+
+                if (item.equals(null)) {
+                    continue;
+                }
+
+                if (item.getType().toString().equals(m.toString())) {
+                    Damageable damage = (Damageable) meta;
+                    int min = Math.min(xp, damage.getDamage());
+                    if ((damage.getDamage() - min==0) && damage.hasDamage()) {
+                        fix(item);
+                    } else {
+                        damage.setDamage(damage.getDamage() - min);
+                    }
+                    xp -= min;
+                    item.setItemMeta(meta);
+                }
+            }
+        }
+        return xp;
+    }
+
+    private static void fix(ItemStack item) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                ItemMeta meta = item.getItemMeta();
+                Damageable damage = (Damageable) meta;
+                damage.setDamage(0);
+                item.setItemMeta(meta);
+            }
+        }.runTaskLater(PLUGIN, 1);
     }
 
 }

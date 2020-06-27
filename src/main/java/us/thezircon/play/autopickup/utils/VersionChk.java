@@ -20,6 +20,7 @@ public class VersionChk {
 
     public static void checkVersion(String name, int id) throws Exception { //https://api.spigotmc.org/legacy/update.php?resource=76103"
 
+        //https://api.github.com/repos/MrButtersDEV/AutoPickup/releases/latest
         String url = "https://api.spigotmc.org/legacy/update.php?resource="+id;
 
         URL obj = new URL(url);
