@@ -1,6 +1,7 @@
 package us.thezircon.play.autopickup.listeners;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.Mendable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BlockBreakEventListener implements Listener {
@@ -30,6 +32,10 @@ public class BlockBreakEventListener implements Listener {
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
+
+        if (!PLUGIN.autopickup_list.contains(player)) {
+            return;
+        }
 
         // Mend Items & Give Player XP
         int xp = e.getExpToDrop();
@@ -105,6 +111,12 @@ public class BlockBreakEventListener implements Listener {
             }
 
         }
+
+        if (verticalReq.contains(e.getBlock().getType()) || verticalReqDown.contains(e.getBlock().getType())) {
+            e.setDropItems(false);
+            vertBreak(player, e.getBlock().getLocation());
+        }
+
     }
 
     private static int mend(ItemStack item, int xp) {
@@ -144,6 +156,34 @@ public class BlockBreakEventListener implements Listener {
                 item.setItemMeta(meta);
             }
         }.runTaskLater(PLUGIN, 1);
+    }
+
+    private static int amt = 1;
+    public static List<Material> verticalReq = Arrays.asList(Material.SUGAR_CANE, Material.CACTUS, Material.BAMBOO, Material.KELP, Material.KELP_PLANT, Material.TWISTING_VINES_PLANT, Material.TWISTING_VINES);
+    public static List<Material> verticalReqDown = Arrays.asList(Material.WEEPING_VINES, Material.WEEPING_VINES_PLANT);
+    private static Material type;
+    private static void vertBreak(Player player, Location loc) {
+
+        type = loc.getBlock().getType();
+        loc.getBlock().setType(Material.AIR);
+
+        if (verticalReq.contains(loc.add(0,1,0).getBlock().getType())) {
+            amt++;
+            vertBreak(player, loc);
+        } else if (verticalReqDown.contains(loc.subtract(0,2,0).getBlock().getType())) {
+            amt++;
+            vertBreak(player, loc);
+        } else {
+
+            if (player.getInventory().firstEmpty()!=-1) {
+                player.getInventory().addItem(new ItemStack(type, amt));
+            } else {
+                player.getWorld().dropItemNaturally(loc, new ItemStack(type, amt));
+            }
+            type = null;
+            amt = 1;
+        }
+
     }
 
 }
