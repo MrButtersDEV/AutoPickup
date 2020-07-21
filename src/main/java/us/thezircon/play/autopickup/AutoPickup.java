@@ -7,10 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.commands.AutoPickup.Auto;
-import us.thezircon.play.autopickup.listeners.BlockBreakEventListener;
-import us.thezircon.play.autopickup.listeners.BlockDropItemEventListener;
-import us.thezircon.play.autopickup.listeners.BlockPhysicsEventListener;
-import us.thezircon.play.autopickup.listeners.PlayerJoinEventListener;
+import us.thezircon.play.autopickup.listeners.*;
 import us.thezircon.play.autopickup.utils.Messages;
 import us.thezircon.play.autopickup.utils.VersionChk;
 
@@ -42,6 +39,7 @@ public final class AutoPickup extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockPhysicsEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
         getServer().getPluginManager().registerEvents(new BlockBreakEventListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityDeathEventListener(), this);
 
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
