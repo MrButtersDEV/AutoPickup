@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.commands.AutoPickup.Auto;
 import us.thezircon.play.autopickup.listeners.*;
 import us.thezircon.play.autopickup.utils.Messages;
+import us.thezircon.play.autopickup.utils.Metrics;
 import us.thezircon.play.autopickup.utils.VersionChk;
 
 import java.io.File;
@@ -43,6 +44,9 @@ public final class AutoPickup extends JavaPlugin {
 
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
+
+        //bStats
+        Metrics metrics = new Metrics(this, 5914);
 
         // Version Check
         String pluginName = this.getName();
