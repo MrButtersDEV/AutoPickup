@@ -1,5 +1,7 @@
 package us.thezircon.play.autopickup.listeners;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.*;
@@ -13,8 +15,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.Mendable;
+import us.thezircon.play.autopickup.utils.TallCrops;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +40,7 @@ public class BlockBreakEventListener implements Listener {
         if (!PLUGIN.autopickup_list.contains(player)) {
             return;
         }
+
 
         // Mend Items & Give Player XP
         int xp = e.getExpToDrop();
@@ -112,6 +117,10 @@ public class BlockBreakEventListener implements Listener {
 
         }
 
+        TallCrops crops = PLUGIN.getCrops();
+        ArrayList<Material> verticalReq = crops.getVerticalReq();
+        ArrayList<Material> verticalReqDown = crops.getVerticalReqDown();
+
         if (verticalReq.contains(e.getBlock().getType()) || verticalReqDown.contains(e.getBlock().getType())) {
             e.setDropItems(false);
             vertBreak(player, e.getBlock().getLocation());
@@ -159,10 +168,11 @@ public class BlockBreakEventListener implements Listener {
     }
 
     private static int amt = 1;
-    public static List<Material> verticalReq = Arrays.asList(Material.SUGAR_CANE, Material.CACTUS, Material.BAMBOO, Material.KELP, Material.KELP_PLANT, Material.TWISTING_VINES_PLANT, Material.TWISTING_VINES);
-    public static List<Material> verticalReqDown = Arrays.asList(Material.WEEPING_VINES, Material.WEEPING_VINES_PLANT);
     private static Material type;
     private static void vertBreak(Player player, Location loc) {
+        TallCrops crops = PLUGIN.getCrops();
+        ArrayList<Material> verticalReq = crops.getVerticalReq();
+        ArrayList<Material> verticalReqDown = crops.getVerticalReqDown();
 
         type = loc.getBlock().getType();
         loc.getBlock().setType(Material.AIR);

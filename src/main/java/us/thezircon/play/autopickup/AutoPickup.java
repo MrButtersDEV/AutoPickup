@@ -10,6 +10,7 @@ import us.thezircon.play.autopickup.commands.AutoPickup.Auto;
 import us.thezircon.play.autopickup.listeners.*;
 import us.thezircon.play.autopickup.utils.Messages;
 import us.thezircon.play.autopickup.utils.Metrics;
+import us.thezircon.play.autopickup.utils.TallCrops;
 import us.thezircon.play.autopickup.utils.VersionChk;
 
 import java.io.File;
@@ -23,6 +24,7 @@ public final class AutoPickup extends JavaPlugin {
     public ArrayList<Player> autopickup_list = new ArrayList<>();
     public Messages messages = null;
     public boolean UP2Date = true;
+    public TallCrops crops;
 
     @Override
     public void onEnable() {
@@ -44,6 +46,9 @@ public final class AutoPickup extends JavaPlugin {
 
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
+
+        // Crops by version
+        crops = new TallCrops();
 
         //bStats
         Metrics metrics = new Metrics(this, 5914);
@@ -90,6 +95,10 @@ public final class AutoPickup extends JavaPlugin {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    public TallCrops getCrops() {
+        return crops;
     }
 
     public void blacklistReload(){
