@@ -6,6 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
@@ -18,7 +19,7 @@ public class BlockDropItemEventListener implements Listener {
 
     private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDrop(BlockDropItemEvent e) {
         Player player = e.getPlayer();
         Block block = e.getBlock();
