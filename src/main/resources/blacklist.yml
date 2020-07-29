@@ -11,12 +11,17 @@
 # By: BUTTERFIELD8 & The Zircon Network                                                                     #
 # Discord: https://discord.gg/ncHH4FP                                                                       #
 # Material Names: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html                         #
+# Entity Names: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html                  #
 #############################################################################################################
 
 #Set to "true" if you would like to enable the blacklist
 doBlacklisted: false
+doBlacklistedEntities: true
 
 #By listing blocks below you are adding them to the blacklist therefore causing them to drop to the ground.
 Blacklisted:
   - DIRT
   - SAND
+
+BlacklistedEntities:
+  - PLAYER
