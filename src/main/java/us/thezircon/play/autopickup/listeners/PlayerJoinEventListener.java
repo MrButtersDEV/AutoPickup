@@ -28,7 +28,7 @@ public class PlayerJoinEventListener implements Listener{
             player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + ChatColor.YELLOW + "Version: " + ChatColor.RED + ver + ChatColor.YELLOW + " is not up to date. Please check your console on next startup or reload.");
 
             TextComponent message = new TextComponent(msgUpdate);
-            message.setClickEvent( new ClickEvent( ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/silky-spawners-lite-silk-touch-your-spawners-silk-spawners.76103/" ) );
+            message.setClickEvent( new ClickEvent( ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/autopickup-1-16-support.70157/" ) );
             message.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click to open on spigot!" ).create() ) );
             player.spigot().sendMessage( message );
         }

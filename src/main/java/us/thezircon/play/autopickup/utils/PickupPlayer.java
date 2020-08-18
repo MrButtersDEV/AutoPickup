@@ -34,7 +34,14 @@ public class PickupPlayer {
         if (!fileExists()) {
            try {
                playerData.createNewFile();
-           } catch (IOException err) {log.warning("[AutoPickup] Unable to create playdata file for "+uuid);}
+           } catch (IOException err) {
+               log.warning("[AutoPickup] Unable to create playdata file for "+uuid);
+               // Dev Build
+               log.severe("[AutoPickup] Cuase: "+err.getCause());
+               System.out.println("");
+               err.printStackTrace();
+               ////////////
+           }
         }
     }
 

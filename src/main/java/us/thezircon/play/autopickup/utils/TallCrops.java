@@ -25,15 +25,12 @@ public class TallCrops {
             verticalReq.add(Material.TWISTING_VINES);
             verticalReq.add(Material.BAMBOO);
             verticalReq.add(Material.BAMBOO_SAPLING);
-            System.out.println("A");
         } else if (Bukkit.getVersion().contains("1.15")) {
             verticalReq.add(Material.BAMBOO);
             verticalReq.add(Material.BAMBOO_SAPLING);
-            System.out.println("B");
         } else if (Bukkit.getVersion().contains("1.14")) {
             verticalReq.add(Material.BAMBOO);
             verticalReq.add(Material.BAMBOO_SAPLING);
-            System.out.println("C");
         }
     }
 
