@@ -29,7 +29,7 @@ public class BlockBreakEventListener implements Listener {
 
     private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent e) {
         Block block = e.getBlock();
         Player player = e.getPlayer();

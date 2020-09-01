@@ -19,7 +19,7 @@ public class BlockDropItemEventListener implements Listener {
 
     private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDrop(BlockDropItemEvent e) {
         Player player = e.getPlayer();
         Block block = e.getBlock();
