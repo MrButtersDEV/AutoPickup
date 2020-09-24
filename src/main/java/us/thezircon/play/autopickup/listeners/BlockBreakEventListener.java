@@ -66,6 +66,13 @@ public class BlockBreakEventListener implements Listener {
                 return;
             }
 
+            // Upgradable Hoppers Patch
+            if (block.getState() instanceof Hopper && AutoPickup.usingUpgradableHoppers) {
+                if (block.getState().getBlockData().getAsString().contains("upgradablehoppers")) {
+                    return;
+                }
+            }
+
             e.setDropItems(false); // Cancel drops
 
             if (((Container) block.getState()).getInventory() instanceof DoubleChestInventory) {
