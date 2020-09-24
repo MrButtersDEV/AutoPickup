@@ -68,7 +68,7 @@ public class BlockBreakEventListener implements Listener {
 
             // Upgradable Hoppers Patch
             if (block.getState() instanceof Hopper && AutoPickup.usingUpgradableHoppers) {
-                if (block.getState().getBlockData().getAsString().contains("upgradablehoppers")) {
+                if (block.getState().getBlockData().getAsString().contains("upgradeablehoppers")) {
                     return;
                 }
             }
