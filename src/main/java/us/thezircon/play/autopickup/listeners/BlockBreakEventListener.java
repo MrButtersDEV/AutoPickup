@@ -1,9 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -64,6 +61,15 @@ public class BlockBreakEventListener implements Listener {
 
             if (block.getState() instanceof ShulkerBox) {
                 return;
+            }
+
+            // Upgradable Hoppers Patch
+            if (block.getState() instanceof Hopper && AutoPickup.usingUpgradableHoppers) {
+                NamespacedKey upgHoppers = new NamespacedKey(PLUGIN.getServer().getPluginManager().getPlugin("UpgradeableHoppers"), "upgradeablehoppers");
+                Container con = (Container) block.getState();
+                if (con.getPersistentDataContainer().getKeys().contains(upgHoppers)) {
+                    return;
+                }
             }
 
             e.setDropItems(false); // Cancel drops

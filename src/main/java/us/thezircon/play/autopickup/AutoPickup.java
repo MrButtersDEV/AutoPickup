@@ -26,6 +26,8 @@ public final class AutoPickup extends JavaPlugin {
     public boolean UP2Date = true;
     public TallCrops crops;
 
+    public static boolean usingUpgradableHoppers = false; // UpgradableHoppers Patch
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -34,6 +36,12 @@ public final class AutoPickup extends JavaPlugin {
         getConfig().options().copyDefaults();
         saveDefaultConfig();
         createBlacklist();
+        createPlayerDataDir();
+
+        // UpgradableHoppers Patch
+        if ((getServer().getPluginManager().getPlugin("UpgradeableHoppers") != null)) {
+            usingUpgradableHoppers = true;
+        }
 
         messages = new Messages();
 
@@ -93,6 +101,13 @@ public final class AutoPickup extends JavaPlugin {
             confBlacklist.load(fileBlacklist);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void createPlayerDataDir() {
+        File dir = new File(getDataFolder(), "PlayerData");
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
     }
 
