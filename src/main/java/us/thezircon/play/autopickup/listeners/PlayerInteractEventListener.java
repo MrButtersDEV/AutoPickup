@@ -22,8 +22,13 @@ public class PlayerInteractEventListener implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
+        if (!PLUGIN.autopickup_list.contains(player) || (e.getAction().equals(Action.LEFT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_AIR))) {
+            return;
+        }
+
         Location loc = e.getClickedBlock().getLocation();
-        if (!PLUGIN.autopickup_list.contains(player)) {
+
+        if (AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
             return;
         }
 

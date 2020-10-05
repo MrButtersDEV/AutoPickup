@@ -27,6 +27,7 @@ public final class AutoPickup extends JavaPlugin {
     public TallCrops crops;
 
     public static boolean usingUpgradableHoppers = false; // UpgradableHoppers Patch
+    public static ArrayList<String> worldsBlacklist;
 
     @Override
     public void onEnable() {
@@ -75,6 +76,11 @@ public final class AutoPickup extends JavaPlugin {
                 }
             }
         }.run();
+
+        // Worlds blacklist
+        if (getBlacklistConf().contains("BlacklistedWorlds")) {
+            worldsBlacklist = (ArrayList<String>) getBlacklistConf().getList("BlacklistedWorlds");
+        }
     }
 
     @Override

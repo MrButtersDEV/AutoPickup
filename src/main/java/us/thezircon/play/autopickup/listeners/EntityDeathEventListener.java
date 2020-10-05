@@ -1,5 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +19,11 @@ public class EntityDeathEventListener implements Listener {
 
         Player player = e.getEntity().getKiller();
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
+
+        Location loc = player.getLocation();
+        if (AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
+            return;
+        }
 
         if (PLUGIN.getBlacklistConf().contains("BlacklistedEntities", true)) {
             boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklistedEntities");

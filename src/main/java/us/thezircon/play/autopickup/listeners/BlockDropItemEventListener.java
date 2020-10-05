@@ -1,5 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
 import org.bukkit.entity.Entity;
@@ -26,6 +27,11 @@ public class BlockDropItemEventListener implements Listener {
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
+
+        Location loc = block.getLocation();
+        if (AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
+            return;
+        }
 
         if (block.getState() instanceof Container) {
             return; // Containers are handled in block break event

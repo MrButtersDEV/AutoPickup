@@ -25,3 +25,6 @@ Blacklisted:
 
 BlacklistedEntities:
   - PLAYER
+
+BlacklistedWorlds:
+  - example
