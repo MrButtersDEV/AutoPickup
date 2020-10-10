@@ -21,7 +21,7 @@ public class EntityDeathEventListener implements Listener {
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
 
         Location loc = player.getLocation();
-        if (AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
+        if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
             return;
         }
 

@@ -27,7 +27,7 @@ public final class AutoPickup extends JavaPlugin {
     public TallCrops crops;
 
     public static boolean usingUpgradableHoppers = false; // UpgradableHoppers Patch
-    public static ArrayList<String> worldsBlacklist;
+    public static ArrayList<String> worldsBlacklist = null;
 
     @Override
     public void onEnable() {

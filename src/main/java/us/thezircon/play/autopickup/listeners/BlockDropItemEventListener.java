@@ -29,7 +29,7 @@ public class BlockDropItemEventListener implements Listener {
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
 
         Location loc = block.getLocation();
-        if (AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
+        if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
             return;
         }
 

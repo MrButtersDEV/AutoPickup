@@ -35,7 +35,7 @@ public class BlockBreakEventListener implements Listener {
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
 
-        if (AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
+        if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
             return;
         }
 
