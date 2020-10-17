@@ -27,6 +27,7 @@ public final class AutoPickup extends JavaPlugin {
     public TallCrops crops;
 
     public static boolean usingUpgradableHoppers = false; // UpgradableHoppers Patch
+    public static boolean usingLocketteProByBrunyman = false; // LockettePro Patch
     public static ArrayList<String> worldsBlacklist = null;
 
     @Override
@@ -42,6 +43,10 @@ public final class AutoPickup extends JavaPlugin {
         // UpgradableHoppers Patch
         if ((getServer().getPluginManager().getPlugin("UpgradeableHoppers") != null)) {
             usingUpgradableHoppers = true;
+        }
+        // LockettePro Patch
+        if ((getServer().getPluginManager().getPlugin("LockettePro") != null)) {
+            usingLocketteProByBrunyman = true;
         }
 
         messages = new Messages();

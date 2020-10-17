@@ -1,5 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
+import me.crafter.mc.lockettepro.LocketteProAPI;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
@@ -43,6 +44,12 @@ public class BlockBreakEventListener implements Listener {
             return;
         }
 
+        // LockettePro Patch
+        if (AutoPickup.usingLocketteProByBrunyman) {
+            if (LocketteProAPI.isLocked(block)) {
+                return;
+            }
+        }
 
         // Mend Items & Give Player XP
         int xp = e.getExpToDrop();
