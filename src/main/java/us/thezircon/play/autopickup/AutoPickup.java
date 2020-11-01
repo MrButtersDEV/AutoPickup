@@ -28,6 +28,7 @@ public final class AutoPickup extends JavaPlugin {
 
     public static boolean usingUpgradableHoppers = false; // UpgradableHoppers Patch
     public static boolean usingLocketteProByBrunyman = false; // LockettePro Patch
+    public static boolean usingBentoBox = false; // BentoBox - AOneBlock Patch
     public static ArrayList<String> worldsBlacklist = null;
 
     @Override
@@ -47,6 +48,10 @@ public final class AutoPickup extends JavaPlugin {
         // LockettePro Patch
         if ((getServer().getPluginManager().getPlugin("LockettePro") != null)) {
             usingLocketteProByBrunyman = true;
+        }
+        // BentoBox - AOneBlock Patch
+        if ((getServer().getPluginManager().getPlugin("BentoBox") != null)) {
+            usingBentoBox = true;
         }
 
         messages = new Messages();

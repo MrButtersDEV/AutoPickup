@@ -1,9 +1,13 @@
 package us.thezircon.play.autopickup.listeners;
 
 import me.crafter.mc.lockettepro.LocketteProAPI;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,13 +18,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.Mendable;
 import us.thezircon.play.autopickup.utils.TallCrops;
+import world.bentobox.bentobox.BentoBox;
+import world.bentobox.bentobox.database.objects.Island;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BlockBreakEventListener implements Listener {
@@ -50,6 +54,35 @@ public class BlockBreakEventListener implements Listener {
                 return;
             }
         }
+
+        // AOneBlock Patch
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (AutoPickup.usingBentoBox) {
+                    BentoBox bb = BentoBox.getInstance();
+                    if (BentoBox.getInstance().getAddonsManager().getAddonByName("AOneBlock").isPresent()) {
+                        Island island = bb.getIslands().getIslandAt(loc).get();
+                        if (island.getCenter().equals(block.getLocation())) {
+                            for (Entity ent : loc.getWorld().getNearbyEntities(block.getLocation().add(0, 1, 0), 1, 1, 1)) {
+                                if (ent instanceof Item) {
+                                    if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
+                                        //Player has no space
+                                        if (doFullInvMSG) {
+                                            player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+                                        }
+                                        return;
+                                    } else {
+                                        player.getInventory().addItem(((Item) ent).getItemStack());
+                                        ent.remove();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }.runTaskLater(PLUGIN, 1);
 
         // Mend Items & Give Player XP
         int xp = e.getExpToDrop();
