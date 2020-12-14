@@ -26,6 +26,12 @@ public class BlockDropItemEventListener implements Listener {
         Block block = e.getBlock();
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
+        boolean voidOnFullInv = false;
+
+        if (PLUGIN.getConfig().contains("voidOnFullInv")) {
+            voidOnFullInv = PLUGIN.getConfig().getBoolean("voidOnFullInv");
+        }
+
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
 
         Location loc = block.getLocation();
@@ -40,14 +46,19 @@ public class BlockDropItemEventListener implements Listener {
         if (PLUGIN.autopickup_list.contains(player)) { // Player has auto enabled
             for (Entity en : e.getItems()) {
 
+                Item i = (Item) en;
+                ItemStack drop = i.getItemStack();
+
                 if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
                     //Player has no space
                     if (doFullInvMSG) {player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());}
+
+                    if (voidOnFullInv) {
+                        i.remove();
+                    }
+
                     return;
                 }
-
-                Item i = (Item) en;
-                ItemStack drop = i.getItemStack();
 
                 if (doBlacklist) { // Checks if blacklist is enabled
                     if (blacklist.contains(drop.getType().toString())) { // Stops resets the loop skipping the item & not removing it

@@ -1,12 +1,12 @@
 name: AutoPickup
-version: 1.1.11-SNAPSHOT
+version: 1.1.12-SNAPSHOT
 main: us.thezircon.play.autopickup.AutoPickup
 prefix: AutoPickup
 authors: [BUTTERFIELD8]
 description: Automatically pickup broken blocks.
 website: https://discord.gg/ncHH4FP
 api-version: 1.13
-softdepend: [BentoBox, LockettePro]
+softdepend: [BentoBox, LockettePro, UpgradeableHoppers]
 commands:
   autopickup:
     description: Toggles the ability to automaticly pickup blocks when you mine them.

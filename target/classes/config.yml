@@ -1,4 +1,4 @@
-ConfigVersion: 1.0
+ConfigVersion: 1.1
 #############################################################################################################
 #                          _             _____    _          _                                              #
 #          /\             | |           |  __ \  (_)        | |                                             #
@@ -33,6 +33,10 @@ msgReload: "&cReloaded Config"
 msgFullInv: "&7Your inventory is full!"
 doFullInvMSG: true
 
+#This is most useful for prison servers! -- This setting is not normally recommended
+#This feature voids any extra blocks broken when /auto is enabled and the inventory is full!
+voidOnFullInv: false
+
 #Plase does not have permission
 msgNoperms: "&cYou don't have permission to use this command"
 
@@ -40,3 +44,4 @@ msgNoperms: "&cYou don't have permission to use this command"
 requirePerms:
   autopickup: true
   auto-reload: true
+
