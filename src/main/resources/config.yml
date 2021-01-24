@@ -1,4 +1,4 @@
-ConfigVersion: 1.1
+ConfigVersion: 1.2
 #############################################################################################################
 #                          _             _____    _          _                                              #
 #          /\             | |           |  __ \  (_)        | |                                             #
@@ -19,6 +19,14 @@ msgPrefix: "&8[&5Auto&d&oPickup&8]"
 #Toggle Message - /auto
 msgAutoPickupEnable: "&7You have&a enabled &7auto pickup."
 msgAutoPickupDisable: "&7You have&c disabled &7auto pickup."
+
+#Toggle Message - /autosmelt
+msgAutoSmeltEnable: "&7You have&a enabled &7auto smelt."
+msgAutoSmeltDisable: "&7You have&c disabled &7auto smelt."
+
+#Toggle Message - /drops
+msgAutoMobDropsEnable: "&7You have&a enabled &7auto drops."
+msgAutoMobDropsDisable: "&7You have&c disabled &7auto drops."
 
 #Aditional toggling messages
 msgAutoEnable: "&7Auto pickup has been automatically&a enabled&7."

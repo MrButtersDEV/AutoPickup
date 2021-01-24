@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.utils.AutoSmelt;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class BlockDropItemEventListener implements Listener {
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
         boolean voidOnFullInv = false;
+        boolean doSmelt = PLUGIN.auto_smelt_blocks.contains(player);
 
         if (PLUGIN.getConfig().contains("voidOnFullInv")) {
             voidOnFullInv = PLUGIN.getConfig().getBoolean("voidOnFullInv");
@@ -66,7 +68,11 @@ public class BlockDropItemEventListener implements Listener {
                     }
                 }
 
-                player.getInventory().addItem(drop);
+                if (doSmelt) {
+                    player.getInventory().addItem(AutoSmelt.smelt(drop, player));
+                } else {
+                    player.getInventory().addItem(drop);
+                }
                 i.remove();
             }
 

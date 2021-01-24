@@ -11,6 +11,12 @@ commands:
   autopickup:
     description: Toggles the ability to automaticly pickup blocks when you mine them.
     aliases: [auto, pickup]
+  autodrops:
+    description: Toggles the ability to automaticly pickup drops from killed entities.
+    aliases: [drops, autod]
+  autosmelt:
+    description: Toggles the ability to automaticly smelt mined blocks.
+    aliases: [asmelt]
 permissions:
   autopickup.pickup.mined.autoenabled:
     default: false

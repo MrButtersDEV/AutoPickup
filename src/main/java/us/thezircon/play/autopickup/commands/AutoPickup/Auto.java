@@ -6,7 +6,9 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.drops;
 import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.reload;
+import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.smelt;
 import us.thezircon.play.autopickup.commands.CMDManager;
 import us.thezircon.play.autopickup.utils.Messages;
 import us.thezircon.play.autopickup.utils.PickupPlayer;
@@ -22,6 +24,8 @@ public class Auto implements TabExecutor{
 
     public Auto(){
         subcommands.add(new reload());
+        subcommands.add(new drops());
+        subcommands.add(new smelt());
     }
 
     public ArrayList<CMDManager> getSubCommands(){
@@ -30,7 +34,7 @@ public class Auto implements TabExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Boolean requirePermsAUTO = PLUGIN.getConfig().getBoolean("requirePerms.autopickup");
+        boolean requirePermsAUTO = PLUGIN.getConfig().getBoolean("requirePerms.autopickup");
 
         if (args.length > 0){
             for (int i = 0; i < getSubCommands().size(); i++){

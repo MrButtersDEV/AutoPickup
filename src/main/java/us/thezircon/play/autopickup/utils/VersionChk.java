@@ -55,6 +55,12 @@ public class VersionChk {
             PLUGIN.getServer().getConsoleSender().sendMessage(PLUGIN.getMsg().getPrefix() + ChatColor.GOLD + " Version: " + ChatColor.GREEN + response.toString() + ChatColor.AQUA + " Using Version: " + ChatColor.DARK_AQUA + ver);
             PLUGIN.UP2Date = false;
         }
+
+        // Config Version:
+        double configVersion = PLUGIN.getConfig().getDouble("ConfigVersion");
+
+
+
     }
 
     public static void noConnection(){

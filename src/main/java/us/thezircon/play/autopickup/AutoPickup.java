@@ -6,7 +6,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import us.thezircon.play.autopickup.commands.AutoDrops;
 import us.thezircon.play.autopickup.commands.AutoPickup.Auto;
+import us.thezircon.play.autopickup.commands.AutoSmelt;
 import us.thezircon.play.autopickup.listeners.*;
 import us.thezircon.play.autopickup.utils.Messages;
 import us.thezircon.play.autopickup.utils.Metrics;
@@ -21,7 +23,9 @@ import java.util.UUID;
 
 public final class AutoPickup extends JavaPlugin {
 
-    public ArrayList<Player> autopickup_list = new ArrayList<>();
+    public ArrayList<Player> autopickup_list = new ArrayList<>(); // Blocks
+    public ArrayList<Player> autopickup_list_mobs = new ArrayList<>(); // Mobs
+    public ArrayList<Player> auto_smelt_blocks = new ArrayList<>(); // AutoSmelt - Blocks
     public Messages messages = null;
     public boolean UP2Date = true;
     public TallCrops crops;
@@ -65,6 +69,8 @@ public final class AutoPickup extends JavaPlugin {
 
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
+        getCommand("autodrops").setExecutor(new AutoDrops());
+        getCommand("autosmelt").setExecutor(new AutoSmelt());
 
         // Crops by version
         crops = new TallCrops();

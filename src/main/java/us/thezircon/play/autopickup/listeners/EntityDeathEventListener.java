@@ -39,8 +39,13 @@ public class EntityDeathEventListener implements Listener {
             }
         }
 
-        if (PLUGIN.autopickup_list.contains(player)) {
+        if (PLUGIN.autopickup_list_mobs.contains(player)) {
 
+            // XP
+            player.giveExp(e.getDroppedExp());
+            e.setDroppedExp(0);
+
+            // Drops
             for (ItemStack drops : e.getDrops()) {
                 if (player.getInventory().firstEmpty() != -1) { // has space
                     player.getInventory().addItem(drops);

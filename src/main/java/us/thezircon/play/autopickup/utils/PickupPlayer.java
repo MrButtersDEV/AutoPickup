@@ -70,10 +70,70 @@ public class PickupPlayer {
         }.runTaskLater(plugin, 1);
     }
 
+    public void setEnabledEntities(boolean e) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!fileExists()) {createFile();}
+
+                File playerFile = new File(plugin.getDataFolder()+File.separator+"PlayerData"+File.separator+uuid+".yml");
+                FileConfiguration data = YamlConfiguration.loadConfiguration(playerFile);
+
+                data.set("enabled_mob_drops", e);
+
+                try {
+                    data.save(playerFile);
+                } catch (IOException err){
+                    log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
+                }
+            }
+        }.runTaskLater(plugin, 1);
+    }
+
+    public void setEnabledAutoSmelt(boolean e) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!fileExists()) {createFile();}
+
+                File playerFile = new File(plugin.getDataFolder()+File.separator+"PlayerData"+File.separator+uuid+".yml");
+                FileConfiguration data = YamlConfiguration.loadConfiguration(playerFile);
+
+                data.set("enabled_auto_smelt", e);
+
+                try {
+                    data.save(playerFile);
+                } catch (IOException err){
+                    log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
+                }
+            }
+        }.runTaskLater(plugin, 1);
+    }
+
     public boolean getToggle(){
         if (!fileExists()) {createFile();}
         FileConfiguration data = YamlConfiguration.loadConfiguration(playerData);
         return data.getBoolean("enabled");
+    }
+
+    public boolean getMobDropsToggle(){
+        if (!fileExists()) {createFile();}
+        FileConfiguration data = YamlConfiguration.loadConfiguration(playerData);
+        try {
+            return data.getBoolean("enabled_mob_drops");
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    public boolean getAutoSmeltToggle(){
+        if (!fileExists()) {createFile();}
+        FileConfiguration data = YamlConfiguration.loadConfiguration(playerData);
+        try {
+            return data.getBoolean("enabled_auto_smelt");
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
 }
