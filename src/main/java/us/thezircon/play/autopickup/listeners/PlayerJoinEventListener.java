@@ -59,6 +59,16 @@ public class PlayerJoinEventListener implements Listener{
                 if (doEnabledOnJoinMSG) { player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getAutoReenabled());}
             }
         }
+        if (PP.getAutoSmeltToggle() && player.hasPermission("autopickup.pickup.mined.autosmelt")) {
+            if (!PLUGIN.auto_smelt_blocks.contains(player)) {
+                PLUGIN.auto_smelt_blocks.add(player);
+            }
+        }
+        if (PP.getMobDropsToggle() && player.hasPermission("autopickup.pickup.entities")) {
+            if (!PLUGIN.autopickup_list_mobs.contains(player)) {
+                PLUGIN.autopickup_list_mobs.add(player);
+            }
+        }
     }
 
 }

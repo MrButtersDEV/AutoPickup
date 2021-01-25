@@ -20,3 +20,5 @@ commands:
 permissions:
   autopickup.pickup.mined.autoenabled:
     default: false
+  autopickup.pickup.entities.autoenabled:
+    default: false

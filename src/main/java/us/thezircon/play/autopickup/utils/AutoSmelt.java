@@ -32,7 +32,7 @@ public class AutoSmelt {
 
             RecipeChoice.MaterialChoice materialChoice = new RecipeChoice.MaterialChoice(Tag.LOGS_THAT_BURN);
 
-            if ((materialChoice.getChoices().contains(((FurnaceRecipe) recipe).getInput().getType()))) {
+            if ((materialChoice.getChoices().contains(itemStack.getType()))) {
                 return new ItemStack(Material.CHARCOAL, itemStack.getAmount());
             }
 
