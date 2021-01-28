@@ -44,6 +44,12 @@ public class BlockBreakEventListener implements Listener {
             return;
         }
 
+        if (doBlacklist) { // Checks if blacklist is enabled
+            if (blacklist.contains(block.getType().toString())) { // Stops resets the loop skipping the item & not removing it
+                return;
+            }
+        }
+
         if (!PLUGIN.autopickup_list.contains(player)) {
             return;
         }
