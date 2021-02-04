@@ -7,9 +7,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.utils.AutoSmelt;
 import us.thezircon.play.autopickup.utils.PickupObjective;
 
 public class ItemSpawnEventListener implements Listener {
+
+    private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
 
     ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -21,9 +24,14 @@ public class ItemSpawnEventListener implements Listener {
             PickupObjective po = AutoPickup.customItemPatch.get(key);
             ItemStack item = e.getEntity().getItemStack();
             Player player = po.getPlayer();
+            boolean doSmelt = PLUGIN.auto_smelt_blocks.contains(player);
             if (player.getInventory().firstEmpty()!=-1) {
                 e.getEntity().remove();
-                player.getInventory().addItem(item);
+                if (doSmelt) {
+                    player.getInventory().addItem(AutoSmelt.smelt(item, player));
+                } else {
+                    player.getInventory().addItem(item);
+                }
             }
         }
     }
