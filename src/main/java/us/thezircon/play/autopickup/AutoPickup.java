@@ -1,5 +1,7 @@
 package us.thezircon.play.autopickup;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -10,15 +12,16 @@ import us.thezircon.play.autopickup.commands.AutoDrops;
 import us.thezircon.play.autopickup.commands.AutoPickup.Auto;
 import us.thezircon.play.autopickup.commands.AutoSmelt;
 import us.thezircon.play.autopickup.listeners.*;
-import us.thezircon.play.autopickup.utils.Messages;
-import us.thezircon.play.autopickup.utils.Metrics;
-import us.thezircon.play.autopickup.utils.TallCrops;
-import us.thezircon.play.autopickup.utils.VersionChk;
+import us.thezircon.play.autopickup.utils.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public final class AutoPickup extends JavaPlugin {
@@ -34,6 +37,10 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingLocketteProByBrunyman = false; // LockettePro Patch
     public static boolean usingBentoBox = false; // BentoBox - AOneBlock Patch
     public static ArrayList<String> worldsBlacklist = null;
+
+    // Custom Items Patch
+    public static HashMap<String, PickupObjective> customItemPatch = new HashMap<>();
+    public static ArrayList<String> customItemPatchKeys = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -66,6 +73,7 @@ public final class AutoPickup extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockBreakEventListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDeathEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractEventListener(), this);
+        getServer().getPluginManager().registerEvents(new ItemSpawnEventListener(), this);
 
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
@@ -97,6 +105,24 @@ public final class AutoPickup extends JavaPlugin {
         if (getBlacklistConf().contains("BlacklistedWorlds")) {
             worldsBlacklist = (ArrayList<String>) getBlacklistConf().getList("BlacklistedWorlds");
         }
+
+        // Pickup Objective Cleaner
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+
+                for (String key : customItemPatchKeys) {
+                    if (customItemPatch.containsKey(key)) {
+                        PickupObjective po = customItemPatch.get(key);
+                        if (Duration.between(Instant.now(), po.getCreatedAt()).getSeconds() < -15) {
+                            customItemPatch.remove(key);
+                            customItemPatchKeys.remove(key);
+                        }
+                    }
+                }
+
+            }
+        }, 0L, 300L); // 15 sec
     }
 
     @Override

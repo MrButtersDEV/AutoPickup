@@ -20,10 +20,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.Mendable;
+import us.thezircon.play.autopickup.utils.PickupObjective;
 import us.thezircon.play.autopickup.utils.TallCrops;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.database.objects.Island;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,6 +107,12 @@ public class BlockBreakEventListener implements Listener {
             } catch (NullPointerException ignored) {}
         }
         e.setExpToDrop(0); // Remove default XP
+
+        ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
+        AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
+        ///////////////////////////////////////////////////////////////////////////////////////
+
 
         // Deal with Containers
         if (block.getState() instanceof Container) {
