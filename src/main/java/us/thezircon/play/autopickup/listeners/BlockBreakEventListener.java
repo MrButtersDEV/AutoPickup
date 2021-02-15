@@ -1,6 +1,7 @@
 package us.thezircon.play.autopickup.listeners;
 
 import me.crafter.mc.lockettepro.LocketteProAPI;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -40,6 +41,7 @@ public class BlockBreakEventListener implements Listener {
         Location loc = e.getBlock().getLocation();
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
+
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
 
         if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
@@ -54,6 +56,19 @@ public class BlockBreakEventListener implements Listener {
 
         if (!PLUGIN.autopickup_list.contains(player)) {
             return;
+        }
+
+        // Check if inv is full title
+        if (PLUGIN.getConfig().contains("titlebar")) {
+            boolean doFullInvMSGTitleBar = PLUGIN.getConfig().getBoolean("titlebar.doTitleBar");
+            String titleLine1 = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("titlebar.line1"));
+            String titleLine2 = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("titlebar.line2"));
+            if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
+                //Player has no space
+                if (doFullInvMSGTitleBar) {
+                    player.sendTitle(titleLine1, titleLine2, 1, 20, 1);
+                }
+            }
         }
 
         // LockettePro Patch
@@ -123,7 +138,7 @@ public class BlockBreakEventListener implements Listener {
 
             // Upgradable Hoppers Patch
             if (block.getState() instanceof Hopper && AutoPickup.usingUpgradableHoppers) {
-                NamespacedKey upgHoppers = new NamespacedKey(PLUGIN.getServer().getPluginManager().getPlugin("UpgradeableHoppers"), "upgradeablehoppers");
+                NamespacedKey upgHoppers = new NamespacedKey(PLUGIN.getServer().getPluginManager().getPlugin("UpgradeableHoppers"), "upgradeablehoppers:o");
                 Container con = (Container) block.getState();
                 if (con.getPersistentDataContainer().getKeys().contains(upgHoppers)) {
                     return;

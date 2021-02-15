@@ -40,6 +40,10 @@ msgReload: "&cReloaded Config"
 #Fully Inventory Message
 msgFullInv: "&7Your inventory is full!"
 doFullInvMSG: true
+titlebar:
+  doTitleBar: false
+  line1: "&cWarning"
+  line2: "&7Inventory is full!"
 
 #This is most useful for prison servers! -- This setting is not normally recommended
 #This feature voids any extra blocks broken when /auto is enabled and the inventory is full!
