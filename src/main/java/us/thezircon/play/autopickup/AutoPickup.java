@@ -122,7 +122,7 @@ public final class AutoPickup extends JavaPlugin {
                 }
 
             }
-        }, 0L, 300L); // 15 sec
+        }, 0L, 100L); // 300 = 15 sec (100 = 5 sec)
     }
 
     @Override
