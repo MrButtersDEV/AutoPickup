@@ -114,7 +114,7 @@ public final class AutoPickup extends JavaPlugin {
                 for (String key : customItemPatchKeys) {
                     if (customItemPatch.containsKey(key)) {
                         PickupObjective po = customItemPatch.get(key);
-                        if (Duration.between(Instant.now(), po.getCreatedAt()).getSeconds() < -15) {
+                        if (Duration.between(Instant.now(), po.getCreatedAt()).getSeconds() < -5) {
                             customItemPatch.remove(key);
                             customItemPatchKeys.remove(key);
                         }
