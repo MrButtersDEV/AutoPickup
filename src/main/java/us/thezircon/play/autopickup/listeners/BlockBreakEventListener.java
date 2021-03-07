@@ -28,6 +28,7 @@ import world.bentobox.bentobox.database.objects.Island;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class BlockBreakEventListener implements Listener {
@@ -145,7 +146,7 @@ public class BlockBreakEventListener implements Listener {
                 }
             }
 
-            e.setDropItems(false); // Cancel drops
+             e.setDropItems(false); // Cancel drops
 
             if (((Container) block.getState()).getInventory() instanceof DoubleChestInventory) {
                 Chest chest = (Chest) block.getState();
@@ -202,8 +203,20 @@ public class BlockBreakEventListener implements Listener {
         ArrayList<Material> verticalReqDown = crops.getVerticalReqDown();
 
         if (verticalReq.contains(e.getBlock().getType()) || verticalReqDown.contains(e.getBlock().getType())) {
-            e.setDropItems(false);
-            vertBreak(player, e.getBlock().getLocation());
+            //e.setDropItems(false);
+            //vertBreak(player, e.getBlock().getLocation());
+            Location tempLoc = loc.clone();
+            while(true) {
+                tempLoc.setY(tempLoc.getY() + 1.0D);
+                String key2 = tempLoc.getBlockX()+";"+tempLoc.getBlockY()+";"+tempLoc.getBlockZ()+";"+tempLoc.getWorld();
+                if (!(verticalReq.contains(tempLoc.getBlock().getType()))) {
+                    //this.addLocation(tempLoc, e.getPlayer());
+                    AutoPickup.customItemPatch.put(key2, new PickupObjective(tempLoc, player, Instant.now()));
+                    break;
+                }
+                AutoPickup.customItemPatch.put(key2, new PickupObjective(tempLoc, player, Instant.now()));
+                //this.addLocation(tempLoc, e.getPlayer());
+            }
         }
 
     }

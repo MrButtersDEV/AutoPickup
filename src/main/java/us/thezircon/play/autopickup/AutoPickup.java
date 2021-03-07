@@ -36,6 +36,7 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingUpgradableHoppers = false; // UpgradableHoppers Patch
     public static boolean usingLocketteProByBrunyman = false; // LockettePro Patch
     public static boolean usingBentoBox = false; // BentoBox - AOneBlock Patch
+    public static boolean usingMCMMO = false;
     public static ArrayList<String> worldsBlacklist = null;
 
     // Custom Items Patch
@@ -52,6 +53,10 @@ public final class AutoPickup extends JavaPlugin {
         createBlacklist();
         createPlayerDataDir();
 
+        // MCMMO Patch
+        if ((getServer().getPluginManager().getPlugin("mcMMO") != null)) {
+            usingMCMMO = true;
+        }
         // UpgradableHoppers Patch
         if ((getServer().getPluginManager().getPlugin("UpgradeableHoppers") != null)) {
             usingUpgradableHoppers = true;
