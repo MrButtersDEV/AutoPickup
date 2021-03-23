@@ -10,7 +10,6 @@ import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.drops;
 import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.reload;
 import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.smelt;
 import us.thezircon.play.autopickup.commands.CMDManager;
-import us.thezircon.play.autopickup.utils.Messages;
 import us.thezircon.play.autopickup.utils.PickupPlayer;
 
 import java.util.ArrayList;

@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.commands.AutoSmelt;
 import us.thezircon.play.autopickup.commands.CMDManager;
-import us.thezircon.play.autopickup.utils.Messages;
 
 import java.util.List;
 
