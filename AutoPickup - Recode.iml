@@ -34,6 +34,5 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.mongodb:mongodb-driver-core:3.8.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.jdt:org.eclipse.jdt.annotation:2.2.200" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jetbrains:annotations:20.1.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: me.crafter.mc.lockettepro:LockettePro:2.10.10" level="project" />
   </component>
 </module>
