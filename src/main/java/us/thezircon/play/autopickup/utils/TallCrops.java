@@ -2,10 +2,8 @@ package us.thezircon.play.autopickup.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TallCrops {
 
