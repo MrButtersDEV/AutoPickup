@@ -12,6 +12,8 @@ import us.thezircon.play.autopickup.AutoPickup;
 import java.util.Iterator;
 import java.util.List;
 
+import static us.thezircon.play.autopickup.listeners.BlockBreakEventListener.mend;
+
 public class EntityDeathEventListener implements Listener {
 
     private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
@@ -42,9 +44,21 @@ public class EntityDeathEventListener implements Listener {
 
         if (PLUGIN.autopickup_list_mobs.contains(player)) {
 
-            // XP
-            player.giveExp(e.getDroppedExp());
-            e.setDroppedExp(0);
+            // Mend Items & Give Player XP
+            int xp = e.getDroppedExp();
+            player.giveExp(xp); // Give player XP
+
+            // Mend
+            mend(player.getInventory().getItemInMainHand(), xp);
+            mend(player.getInventory().getItemInOffHand(), xp);
+            ItemStack armor[] = player.getInventory().getArmorContents();
+            for (ItemStack i : armor)
+            {
+                try {
+                    mend(i, xp);
+                } catch (NullPointerException ignored) {}
+            }
+            e.setDroppedExp(0); // Remove default XP
 
             // Drops
             Iterator<ItemStack> iter = e.getDrops().iterator();

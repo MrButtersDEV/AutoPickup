@@ -208,7 +208,7 @@ public class BlockBreakEventListener implements Listener {
 
     }
 
-    private static int mend(ItemStack item, int xp) {
+    public static int mend(ItemStack item, int xp) {
 
         if (item.containsEnchantment(Enchantment.MENDING)) {
             ItemMeta meta = item.getItemMeta();
