@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class EntityDeathEventListener implements Listener {
@@ -46,9 +47,12 @@ public class EntityDeathEventListener implements Listener {
             e.setDroppedExp(0);
 
             // Drops
-            for (ItemStack drops : e.getDrops()) {
+            Iterator<ItemStack> iter = e.getDrops().iterator();
+            while (iter.hasNext()) {
+                ItemStack drops = iter.next();
                 if (player.getInventory().firstEmpty() != -1) { // has space
                     player.getInventory().addItem(drops);
+                    iter.remove();
                 } else { // inv full
                     if (doFullInvMSG) {
                         player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
