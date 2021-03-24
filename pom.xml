@@ -92,11 +92,5 @@
             <version>20.1.0</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>me.crafter.mc.lockettepro</groupId>
-            <artifactId>LockettePro</artifactId>
-            <version>2.10.10</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 </project>
