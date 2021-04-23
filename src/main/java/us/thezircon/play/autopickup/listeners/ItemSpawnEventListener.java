@@ -10,6 +10,8 @@ import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.AutoSmelt;
 import us.thezircon.play.autopickup.utils.PickupObjective;
 
+import java.util.UUID;
+
 public class ItemSpawnEventListener implements Listener {
 
     private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
@@ -18,6 +20,14 @@ public class ItemSpawnEventListener implements Listener {
 
     @EventHandler
     public void onSpawn(ItemSpawnEvent e) {
+
+        // Ignores items dropped by players
+        UUID uuid = e.getEntity().getUniqueId();
+        if (AutoPickup.droppedItems.contains(uuid)) {
+            AutoPickup.droppedItems.remove(uuid);
+            return;
+        }
+
         Location loc = e.getLocation();
         String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
         if (AutoPickup.customItemPatch.containsKey(key)) {

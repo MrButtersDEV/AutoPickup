@@ -85,6 +85,9 @@ public class BlockBreakEventListener implements Listener {
                 if (AutoPickup.usingBentoBox) {
                     BentoBox bb = BentoBox.getInstance();
                     if (BentoBox.getInstance().getAddonsManager().getAddonByName("AOneBlock").isPresent()) {
+
+                        if (!bb.getIslands().getIslandAt(loc).isPresent()) { return; }
+
                         Island island = bb.getIslands().getIslandAt(loc).get();
                         if (island.getCenter().equals(block.getLocation())) {
                             for (Entity ent : loc.getWorld().getNearbyEntities(block.getLocation().add(0, 1, 0), 1, 1, 1)) {

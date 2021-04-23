@@ -18,8 +18,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public final class AutoPickup extends JavaPlugin {
 
@@ -38,6 +37,7 @@ public final class AutoPickup extends JavaPlugin {
     // Custom Items Patch
     public static HashMap<String, PickupObjective> customItemPatch = new HashMap<>();
     public static ArrayList<String> customItemPatchKeys = new ArrayList<>();
+    public static HashSet<UUID> droppedItems = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -70,6 +70,7 @@ public final class AutoPickup extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockBreakEventListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDeathEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractEventListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDropItemEventListener(), this);
         getServer().getPluginManager().registerEvents(new ItemSpawnEventListener(), this);
 
         // Commands
@@ -120,6 +121,14 @@ public final class AutoPickup extends JavaPlugin {
 
             }
         }, 0L, 300L); // 15 sec
+
+        // Dropped items cleaner
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                droppedItems.removeIf(uuid -> Objects.requireNonNull(Bukkit.getEntity(uuid)).isDead());
+            }
+        }, 0L, 6000L); // 5 min
     }
 
     @Override
