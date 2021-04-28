@@ -122,11 +122,14 @@ public final class AutoPickup extends JavaPlugin {
             }
         }, 0L, 300L); // 15 sec
 
-        // Dropped items cleaner
+        // Dropped items cleaner ****
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
-                droppedItems.removeIf(uuid -> Objects.requireNonNull(Bukkit.getEntity(uuid)).isDead());
+                try {
+                    droppedItems.removeIf(uuid -> (Bukkit.getEntity(uuid))==null);
+                    droppedItems.removeIf(uuid -> (Bukkit.getEntity(uuid)).isDead()); ///////
+                } catch (NullPointerException ignored) {}
             }
         }, 0L, 6000L); // 5 min
     }
