@@ -67,17 +67,13 @@
             <id>codemc-repo</id>
             <url>https://repo.codemc.org/repository/maven-public/</url>
         </repository>
-        <repository>
-            <id>lockettepro-mirror</id>
-            <url>https://repo.internetpolice.eu/deprepo/</url>
-        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.17-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -90,12 +86,6 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>20.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.crafter.mc.lockettepro</groupId>
-            <artifactId>LockettePro</artifactId>
-            <version>2.10.10</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

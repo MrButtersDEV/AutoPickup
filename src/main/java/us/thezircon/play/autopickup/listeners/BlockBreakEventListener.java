@@ -257,9 +257,11 @@ public class BlockBreakEventListener implements Listener {
         ArrayList<Material> verticalReq = crops.getVerticalReq();
         ArrayList<Material> verticalReqDown = crops.getVerticalReqDown();
 
-        type = loc.getBlock().getType();
-        loc.getBlock().setType(Material.AIR);
+        //type = loc.getBlock().getType();
+        type = TallCrops.checkAltType(loc.getBlock().getType());
+        loc.getBlock().setType(Material.AIR, true);
 
+        //System.out.println(loc.clone().add(0,1,0).getBlock().getType() + " | " + loc.toString());
         if (verticalReq.contains(loc.add(0,1,0).getBlock().getType())) {
             amt++;
             vertBreak(player, loc);
@@ -267,7 +269,6 @@ public class BlockBreakEventListener implements Listener {
             amt++;
             vertBreak(player, loc);
         } else {
-
             if (player.getInventory().firstEmpty()!=-1) {
                 player.getInventory().addItem(new ItemStack(type, amt));
             } else {
@@ -275,6 +276,11 @@ public class BlockBreakEventListener implements Listener {
             }
             type = null;
             amt = 1;
+            ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+            loc.add(0,1,0);
+            String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
+            AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
+            ///////////////////////////////////////////////////////////////////////////////////////
         }
 
     }

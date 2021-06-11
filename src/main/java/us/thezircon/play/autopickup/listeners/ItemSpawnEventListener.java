@@ -1,5 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,6 +21,8 @@ public class ItemSpawnEventListener implements Listener {
 
     @EventHandler
     public void onSpawn(ItemSpawnEvent e) {
+
+        //System.out.println(e.getLocation().toString() + " | " + e.getEntity().getItemStack().getType());
 
         // Ignores items dropped by players
         UUID uuid = e.getEntity().getUniqueId();
