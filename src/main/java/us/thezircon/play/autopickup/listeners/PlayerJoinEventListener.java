@@ -51,6 +51,12 @@ public class PlayerJoinEventListener implements Listener{
             }
         }
 
+        if (player.hasPermission("autopickup.pickup.mined.autosmelt.autoenabled")) {
+            if (!PLUGIN.auto_smelt_blocks.contains(player)) {
+                PLUGIN.auto_smelt_blocks.add(player);
+            }
+        }
+
         // Auto Re-Enable - Turns auto on if they left the server with it on.
         PickupPlayer PP = new PickupPlayer(player);
         if (PP.getToggle() && player.hasPermission("autopickup.pickup.mined")) {
