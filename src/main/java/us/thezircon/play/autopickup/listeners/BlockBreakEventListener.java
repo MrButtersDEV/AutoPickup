@@ -20,6 +20,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.utils.HexFormat;
 import us.thezircon.play.autopickup.utils.Mendable;
 import us.thezircon.play.autopickup.utils.PickupObjective;
 import us.thezircon.play.autopickup.utils.TallCrops;
@@ -61,8 +62,8 @@ public class BlockBreakEventListener implements Listener {
         // Check if inv is full title
         if (PLUGIN.getConfig().contains("titlebar")) {
             boolean doFullInvMSGTitleBar = PLUGIN.getConfig().getBoolean("titlebar.doTitleBar");
-            String titleLine1 = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("titlebar.line1"));
-            String titleLine2 = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("titlebar.line2"));
+            String titleLine1 = HexFormat.format(PLUGIN.getConfig().getString("titlebar.line1"));
+            String titleLine2 = HexFormat.format(PLUGIN.getConfig().getString("titlebar.line2"));
             if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
                 //Player has no space
                 if (doFullInvMSGTitleBar) {

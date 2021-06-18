@@ -1,0 +1,4 @@
+papi:
+  enabled:
+    true: "&aEnabled"
+    false: "&cDisabled"

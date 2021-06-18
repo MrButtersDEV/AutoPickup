@@ -1,9 +1,11 @@
 package us.thezircon.play.autopickup.commands.AutoPickup.subcommands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.commands.CMDManager;
+import us.thezircon.play.autopickup.papi.AutoPickupExpansion;
 import us.thezircon.play.autopickup.utils.Messages;
 
 import java.util.List;
@@ -34,6 +36,11 @@ public class reload extends CMDManager {
         if (sender.hasPermission("autopickup.admin") || !requirePermsRELOAD) {
             PLUGIN.reloadConfig();
             PLUGIN.blacklistReload();
+
+            if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+                PLUGIN.PAPIReload();
+            }
+
             PLUGIN.messages = new Messages();
             sender.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getReload());
         } else {

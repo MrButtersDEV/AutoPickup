@@ -1,6 +1,5 @@
 package us.thezircon.play.autopickup.utils;
 
-import org.bukkit.ChatColor;
 import us.thezircon.play.autopickup.AutoPickup;
 
 public class Messages {
@@ -70,20 +69,20 @@ public class Messages {
     }
 
     public Messages() {
-        this.prefix = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgPrefix"));
-        this.autoPickupEnable = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgAutoPickupEnable"));
-        this.autoPickupDisable = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgAutoPickupDisable"));
-        this.autoEnabled = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgAutoEnable"));
-        this.autoReenabled = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgEnabledJoinMSG"));
-        this.reload = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgReload"));
-        this.fullInventory = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgFullInv"));
-        this.noPerms = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgNoperms"));
+        this.prefix = HexFormat.format(PLUGIN.getConfig().getString("msgPrefix"));
+        this.autoPickupEnable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoPickupEnable"));
+        this.autoPickupDisable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoPickupDisable"));
+        this.autoEnabled = HexFormat.format(PLUGIN.getConfig().getString("msgAutoEnable"));
+        this.autoReenabled = HexFormat.format(PLUGIN.getConfig().getString("msgEnabledJoinMSG"));
+        this.reload = HexFormat.format(PLUGIN.getConfig().getString("msgReload"));
+        this.fullInventory = HexFormat.format(PLUGIN.getConfig().getString("msgFullInv"));
+        this.noPerms = HexFormat.format(PLUGIN.getConfig().getString("msgNoperms"));
 
         try {
-            this.msgAutoDropsEnable = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgAutoMobDropsEnable"));
-            this.msgAutoDropsDisable = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgAutoMobDropsDisable"));
-            this.msgAutoSmeltEnable = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgAutoSmeltEnable"));
-            this.msgAutoSmeltDisable = ChatColor.translateAlternateColorCodes('&', PLUGIN.getConfig().getString("msgAutoSmeltDisable"));
+            this.msgAutoDropsEnable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoMobDropsEnable"));
+            this.msgAutoDropsDisable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoMobDropsDisable"));
+            this.msgAutoSmeltEnable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoSmeltEnable"));
+            this.msgAutoSmeltDisable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoSmeltDisable"));
         } catch (NullPointerException e) {
             double ver = PLUGIN.getConfig().getDouble("ConfigVersion");
             if (ver==1.1) {

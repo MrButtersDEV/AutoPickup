@@ -11,6 +11,7 @@ import us.thezircon.play.autopickup.commands.AutoDrops;
 import us.thezircon.play.autopickup.commands.AutoPickup.Auto;
 import us.thezircon.play.autopickup.commands.AutoSmelt;
 import us.thezircon.play.autopickup.listeners.*;
+import us.thezircon.play.autopickup.papi.AutoPickupExpansion;
 import us.thezircon.play.autopickup.utils.*;
 
 import java.io.File;
@@ -39,15 +40,24 @@ public final class AutoPickup extends JavaPlugin {
     public static ArrayList<String> customItemPatchKeys = new ArrayList<>();
     public static HashSet<UUID> droppedItems = new HashSet<>();
 
+    private static AutoPickup instance;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
+        instance = this;
 
         // Load Configuration Files
         getConfig().options().copyDefaults();
         saveDefaultConfig();
         createBlacklist();
         createPlayerDataDir();
+
+        // PAPI Check
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+            createPAPI();
+            new AutoPickupExpansion().register();
+        }
 
         // UpgradableHoppers Patch
         if ((getServer().getPluginManager().getPlugin("UpgradeableHoppers") != null)) {
@@ -162,6 +172,37 @@ public final class AutoPickup extends JavaPlugin {
         }
     }
 
+    public void blacklistReload(){
+        confBlacklist = YamlConfiguration.loadConfiguration(fileBlacklist);
+    }
+
+    //papi.yml
+    private File filePAPI;
+    private FileConfiguration confPAPI;
+
+    public FileConfiguration getPAPIConf() {
+        return this.confPAPI;
+    }
+
+    private void createPAPI() {
+        filePAPI = new File(getDataFolder(), "papi.yml");
+        if (!filePAPI.exists()) {
+            filePAPI.getParentFile().mkdirs();
+            saveResource("papi.yml", false);
+        }
+
+        confPAPI= new YamlConfiguration();
+        try {
+            confPAPI.load(filePAPI);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void PAPIReload(){
+        confPAPI = YamlConfiguration.loadConfiguration(filePAPI);
+    }
+
     public void createPlayerDataDir() {
         File dir = new File(getDataFolder(), "PlayerData");
         if (!dir.exists()) {
@@ -173,11 +214,11 @@ public final class AutoPickup extends JavaPlugin {
         return crops;
     }
 
-    public void blacklistReload(){
-        confBlacklist = YamlConfiguration.loadConfiguration(fileBlacklist);
-    }
-
     public Messages getMsg() {
         return messages;
+    }
+
+    public static AutoPickup getInstance() {
+        return instance;
     }
 }
