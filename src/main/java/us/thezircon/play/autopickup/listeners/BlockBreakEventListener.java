@@ -1,7 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
 import me.crafter.mc.lockettepro.LocketteProAPI;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -57,6 +56,13 @@ public class BlockBreakEventListener implements Listener {
 
         if (!PLUGIN.autopickup_list.contains(player)) {
             return;
+        }
+
+        // QuickShop chest patch
+        if (AutoPickup.usingQuickShop) {
+            if(e.toString().startsWith("org.maxgamer.quickshop.util.PermissionChecker")) {
+                return;
+            }
         }
 
         // Check if inv is full title

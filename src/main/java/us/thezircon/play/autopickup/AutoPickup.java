@@ -33,6 +33,8 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingUpgradableHoppers = false; // UpgradableHoppers Patch
     public static boolean usingLocketteProByBrunyman = false; // LockettePro Patch
     public static boolean usingBentoBox = false; // BentoBox - AOneBlock Patch
+    public static boolean usingQuickShop = false; //QuickShop - Ghost_chu (reremake)
+
     public static ArrayList<String> worldsBlacklist = null;
 
     // Custom Items Patch
@@ -70,6 +72,10 @@ public final class AutoPickup extends JavaPlugin {
         // BentoBox - AOneBlock Patch
         if ((getServer().getPluginManager().getPlugin("BentoBox") != null)) {
             usingBentoBox = true;
+        }
+        // QuickShop - QuickShop Patch
+        if ((getServer().getPluginManager().getPlugin("QuickShop") != null)) {
+            usingQuickShop = true;
         }
 
         messages = new Messages();
