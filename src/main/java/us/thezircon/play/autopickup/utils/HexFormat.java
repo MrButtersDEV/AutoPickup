@@ -11,7 +11,7 @@ public class HexFormat {
     private static final Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
 
     public static String format(String msg) {
-        if (Bukkit.getVersion().contains("1.17") || Bukkit.getVersion().contains("1.16") || Bukkit.getVersion().contains("1.18")) {
+        if (Bukkit.getVersion().contains("1.17") || Bukkit.getVersion().contains("1.16") || Bukkit.getVersion().contains("1.18") || Bukkit.getVersion().contains("1.19")) {
             Matcher match = pattern.matcher(msg);
             while (match.find()) {
                 String color = msg.substring(match.start(), match.end());

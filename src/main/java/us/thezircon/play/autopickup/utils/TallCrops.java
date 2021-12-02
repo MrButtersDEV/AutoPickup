@@ -16,7 +16,16 @@ public class TallCrops {
         verticalReq.add(Material.KELP);
         verticalReq.add(Material.KELP_PLANT);
 
-        if (Bukkit.getVersion().contains("1.17")) {
+        if (Bukkit.getVersion().contains("1.18") || Bukkit.getVersion().contains("1.19")) {
+            verticalReqDown.add(Material.WEEPING_VINES);
+            verticalReqDown.add(Material.WEEPING_VINES_PLANT);
+            verticalReq.add(Material.TWISTING_VINES_PLANT);
+            verticalReq.add(Material.TWISTING_VINES);
+            verticalReq.add(Material.BAMBOO);
+            verticalReq.add(Material.BAMBOO_SAPLING);
+            verticalReq.add(Material.BIG_DRIPLEAF_STEM);
+            verticalReq.add(Material.BIG_DRIPLEAF);
+        } else if (Bukkit.getVersion().contains("1.17")) {
             verticalReqDown.add(Material.WEEPING_VINES);
             verticalReqDown.add(Material.WEEPING_VINES_PLANT);
             verticalReq.add(Material.TWISTING_VINES_PLANT);

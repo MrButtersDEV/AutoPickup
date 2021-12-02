@@ -39,7 +39,6 @@ public final class AutoPickup extends JavaPlugin {
 
     // Custom Items Patch
     public static HashMap<String, PickupObjective> customItemPatch = new HashMap<>();
-    public static ArrayList<String> customItemPatchKeys = new ArrayList<>();
     public static HashSet<UUID> droppedItems = new HashSet<>();
 
     private static AutoPickup instance;
@@ -121,25 +120,22 @@ public final class AutoPickup extends JavaPlugin {
         }
 
         // Pickup Objective Cleaner
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
-
-                for (String key : customItemPatchKeys) {
-                    if (customItemPatch.containsKey(key)) {
-                        PickupObjective po = customItemPatch.get(key);
-                        if (Duration.between(Instant.now(), po.getCreatedAt()).getSeconds() < -15) {
-                            customItemPatch.remove(key);
-                            customItemPatchKeys.remove(key);
-                        }
+                for (String key : customItemPatch.keySet()) {
+                    PickupObjective po = customItemPatch.get(key);
+                    System.out.println(po.getCreatedAt());
+                    System.out.println(Duration.between(Instant.now(), po.getCreatedAt()).getSeconds());
+                    if (Duration.between(Instant.now(), po.getCreatedAt()).getSeconds() < -15) {
+                        customItemPatch.remove(key);
                     }
                 }
-
             }
-        }, 0L, 300L); // 15 sec
+        }.runTaskTimerAsynchronously(this, 300L, 300L); // 15 sec
 
         // Dropped items cleaner ****
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
                 try {
@@ -147,8 +143,11 @@ public final class AutoPickup extends JavaPlugin {
                     droppedItems.removeIf(uuid -> (Bukkit.getEntity(uuid)).isDead()); ///////
                 } catch (NullPointerException ignored) {}
             }
-        }, 0L, 6000L); // 5 min
+        }.runTaskTimerAsynchronously(this, 6000L, 6000L); // 5 min
+
     }
+
+
 
     @Override
     public void onDisable() {
