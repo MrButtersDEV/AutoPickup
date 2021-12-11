@@ -204,7 +204,7 @@ public class BlockBreakEventListener implements Listener {
                     return;
                 }
             }
-
+            
             ItemStack drop = new ItemStack(e.getBlock().getType());
             if (player.getInventory().firstEmpty()!=-1) {
                 player.getInventory().addItem(drop);
