@@ -22,8 +22,6 @@ public class ItemSpawnEventListener implements Listener {
     @EventHandler
     public void onSpawn(ItemSpawnEvent e) {
 
-        //System.out.println(e.getLocation().toString() + " | " + e.getEntity().getItemStack().getType());
-
         // Ignores items dropped by players
         UUID uuid = e.getEntity().getUniqueId();
         if (AutoPickup.droppedItems.contains(uuid)) {

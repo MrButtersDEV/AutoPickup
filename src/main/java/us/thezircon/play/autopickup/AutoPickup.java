@@ -23,9 +23,9 @@ import java.util.*;
 
 public final class AutoPickup extends JavaPlugin {
 
-    public ArrayList<Player> autopickup_list = new ArrayList<>(); // Blocks
-    public ArrayList<Player> autopickup_list_mobs = new ArrayList<>(); // Mobs
-    public ArrayList<Player> auto_smelt_blocks = new ArrayList<>(); // AutoSmelt - Blocks
+    public HashSet<Player> autopickup_list = new HashSet<>(); // Blocks
+    public HashSet<Player> autopickup_list_mobs = new HashSet<>(); // Mobs
+    public HashSet<Player> auto_smelt_blocks = new HashSet<>(); // AutoSmelt - Blocks
     public Messages messages = null;
     public boolean UP2Date = true;
     public TallCrops crops;
@@ -34,6 +34,7 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingLocketteProByBrunyman = false; // LockettePro Patch
     public static boolean usingBentoBox = false; // BentoBox - AOneBlock Patch
     public static boolean usingQuickShop = false; //QuickShop - Ghost_chu (reremake)
+    public static boolean usingEpicFurnaces = false; //EpicFurnaces - Songoda
 
     public static ArrayList<String> worldsBlacklist = null;
 
@@ -75,6 +76,11 @@ public final class AutoPickup extends JavaPlugin {
         // QuickShop - QuickShop Patch
         if ((getServer().getPluginManager().getPlugin("QuickShop") != null)) {
             usingQuickShop = true;
+        }
+
+        // EpicFurnaces - EpicFurnaces Patch
+        if ((getServer().getPluginManager().getPlugin("EpicFurnaces") != null)) {
+            usingEpicFurnaces = true;
         }
 
         messages = new Messages();
@@ -125,10 +131,13 @@ public final class AutoPickup extends JavaPlugin {
             public void run() {
                 for (String key : customItemPatch.keySet()) {
                     PickupObjective po = customItemPatch.get(key);
-                    System.out.println(po.getCreatedAt());
-                    System.out.println(Duration.between(Instant.now(), po.getCreatedAt()).getSeconds());
                     if (Duration.between(Instant.now(), po.getCreatedAt()).getSeconds() < -15) {
-                        customItemPatch.remove(key);
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                customItemPatch.remove(key);
+                            }
+                        }.runTask(instance);
                     }
                 }
             }
@@ -143,7 +152,7 @@ public final class AutoPickup extends JavaPlugin {
                     droppedItems.removeIf(uuid -> (Bukkit.getEntity(uuid)).isDead()); ///////
                 } catch (NullPointerException ignored) {}
             }
-        }.runTaskTimerAsynchronously(this, 6000L, 6000L); // 5 min
+        }.runTaskTimer(this, 6000L, 6000L); // 5 min
 
     }
 
