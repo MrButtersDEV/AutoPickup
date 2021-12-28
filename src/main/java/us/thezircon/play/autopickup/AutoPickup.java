@@ -35,6 +35,7 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingBentoBox = false; // BentoBox - AOneBlock Patch
     public static boolean usingQuickShop = false; //QuickShop - Ghost_chu (reremake)
     public static boolean usingEpicFurnaces = false; //EpicFurnaces - Songoda
+    public static boolean usingWildChests = false; // WildChests - BG Development
 
     public static ArrayList<String> worldsBlacklist = null;
 
@@ -81,6 +82,11 @@ public final class AutoPickup extends JavaPlugin {
         // EpicFurnaces - EpicFurnaces Patch
         if ((getServer().getPluginManager().getPlugin("EpicFurnaces") != null)) {
             usingEpicFurnaces = true;
+        }
+
+        // WildChests - WildChests Patch
+        if ((getServer().getPluginManager().getPlugin("WildChests") != null)) {
+            usingWildChests = true;
         }
 
         messages = new Messages();

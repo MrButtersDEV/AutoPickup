@@ -200,7 +200,14 @@ public class BlockBreakEventListener implements Listener {
 
             // EpicFurnaces patch
             if (AutoPickup.usingEpicFurnaces) {
-                if (block.getType()==Material.FURNACE) {
+                if (block.getType()==Material.FURNACE || block.getType()==Material.BLAST_FURNACE || block.getType()==Material.SMOKER) {
+                    return;
+                }
+            }
+
+            // WildChests patch
+            if (AutoPickup.usingWildChests) {
+                if (block.getType()==Material.CHEST) {
                     return;
                 }
             }
