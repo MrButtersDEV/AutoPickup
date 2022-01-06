@@ -11,6 +11,7 @@ import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.AutoSmelt;
 import us.thezircon.play.autopickup.utils.PickupObjective;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ItemSpawnEventListener implements Listener {
@@ -21,12 +22,25 @@ public class ItemSpawnEventListener implements Listener {
 
     @EventHandler
     public void onSpawn(ItemSpawnEvent e) {
+        boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
+
+        List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
+
+        if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(e.getLocation().getWorld().getName())) {
+            return;
+        }
 
         // Ignores items dropped by players
         UUID uuid = e.getEntity().getUniqueId();
         if (AutoPickup.droppedItems.contains(uuid)) {
             AutoPickup.droppedItems.remove(uuid);
             return;
+        }
+
+        if (doBlacklist) { // Checks if blacklist is enabled
+            if (blacklist.contains(e.getEntity().getItemStack().getType().toString())) { // Stop resets the loop skipping the item & not removing it
+                return;
+            }
         }
 
         Location loc = e.getLocation();
