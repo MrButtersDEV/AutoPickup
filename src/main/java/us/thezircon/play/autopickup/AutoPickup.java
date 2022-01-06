@@ -37,6 +37,8 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingEpicFurnaces = false; //EpicFurnaces - Songoda
     public static boolean usingWildChests = false; // WildChests - BG Development
 
+    public static boolean usingPlaceholderAPI = false; // Papi - clip
+
     public static ArrayList<String> worldsBlacklist = null;
 
     // Custom Items Patch
@@ -87,6 +89,11 @@ public final class AutoPickup extends JavaPlugin {
         // WildChests - WildChests Patch
         if ((getServer().getPluginManager().getPlugin("WildChests") != null)) {
             usingWildChests = true;
+        }
+
+        // For placeholders
+        if ((getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)) {
+            usingPlaceholderAPI = true;
         }
 
         messages = new Messages();
