@@ -142,17 +142,7 @@ public final class AutoPickup extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (String key : customItemPatch.keySet()) {
-                    PickupObjective po = customItemPatch.get(key);
-                    if (Duration.between(Instant.now(), po.getCreatedAt()).getSeconds() < -15) {
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                customItemPatch.remove(key);
-                            }
-                        }.runTask(instance);
-                    }
-                }
+                customItemPatch.keySet().removeIf(key -> (Duration.between(Instant.now(), customItemPatch.get(key).getCreatedAt()).getSeconds() < -15));
             }
         }.runTaskTimerAsynchronously(this, 300L, 300L); // 15 sec
 
