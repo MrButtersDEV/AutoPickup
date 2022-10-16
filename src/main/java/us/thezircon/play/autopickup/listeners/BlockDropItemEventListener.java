@@ -47,6 +47,10 @@ public class BlockDropItemEventListener implements Listener {
         if (PLUGIN.autopickup_list.contains(player)) { // Player has auto enabled
             for (Entity en : e.getItems()) {
 
+                if (en==null || en.isDead() || !en.isValid()) {
+                    continue; // TEST
+                }
+
                 Item i = (Item) en;
                 ItemStack drop = i.getItemStack();
 
