@@ -11,10 +11,10 @@ public class TallCrops {
     public ArrayList<Material> verticalReqDown = new ArrayList<>();
 
     public TallCrops () {
-        verticalReq.add(Material.SUGAR_CANE);
-        verticalReq.add(Material.CACTUS);
-        verticalReq.add(Material.KELP);
-        verticalReq.add(Material.KELP_PLANT);
+        //verticalReq.add(Material.SUGAR_CANE);
+        //verticalReq.add(Material.CACTUS);
+        //verticalReq.add(Material.KELP);
+        //verticalReq.add(Material.KELP_PLANT);
 
         if (Bukkit.getVersion().contains("1.18") || Bukkit.getVersion().contains("1.19")) {
             verticalReqDown.add(Material.WEEPING_VINES);

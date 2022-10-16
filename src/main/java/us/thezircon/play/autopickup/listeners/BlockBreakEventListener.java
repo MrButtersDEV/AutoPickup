@@ -225,6 +225,53 @@ public class BlockBreakEventListener implements Listener {
         ArrayList<Material> verticalReq = crops.getVerticalReq();
         ArrayList<Material> verticalReqDown = crops.getVerticalReqDown();
 
+        // TEST START
+        Location l = e.getBlock().getLocation();
+        //Deal with kelp
+
+        if(e.getBlock().getType() == Material.KELP_PLANT || e.getBlock().getType().equals(Material.KELP) || e.getBlock().getType() == Material.BAMBOO) {
+            Location lnew = l.clone();
+            do {
+                lnew.setY(lnew.getY()+1);
+                if(lnew.getBlock().getType() == Material.KELP_PLANT || lnew.getBlock().getType().equals(Material.KELP) || lnew.getBlock().getType() == Material.BAMBOO) {
+                    addLocation(lnew, e.getPlayer());
+                }
+                else {
+                    break;
+                }
+            } while (true);
+            addLocation(lnew, e.getPlayer());
+        }
+        //deal with cactus
+        if (e.getBlock().getType() == Material.CACTUS || e.getBlock().getType() == Material.SAND) {
+            Location lnew = l.clone();
+            do {
+                lnew.setY(lnew.getY() + 1);
+                if (lnew.getBlock().getType() == Material.CACTUS) {
+                    addLocation(lnew, e.getPlayer());
+                } else {
+                    break;
+                }
+            } while (true);
+            addLocation(lnew, e.getPlayer());
+        }
+
+        //deal with sugarcane
+        if (e.getBlock().getType() == Material.SUGAR_CANE || e.getBlock().getType() == Material.GRASS || e.getBlock().getType() == Material.SAND) {
+            Location lnew = l.clone();
+            do {
+                lnew.setY(lnew.getY() + 1);
+                if (lnew.getBlock().getType() == Material.SUGAR_CANE) {
+                    addLocation(lnew, e.getPlayer());
+                } else {
+                    break;
+                }
+            } while (true);
+            addLocation(lnew, e.getPlayer());
+        }
+
+        // TEST END
+
         if (verticalReq.contains(e.getBlock().getType()) || verticalReqDown.contains(e.getBlock().getType())) {
             e.setDropItems(false);
             vertBreak(player, e.getBlock().getLocation());
@@ -306,6 +353,11 @@ public class BlockBreakEventListener implements Listener {
             ///////////////////////////////////////////////////////////////////////////////////////
         }
 
+    }
+
+    private void addLocation(Location loc, Player player) {
+        String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
+        AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
     }
 
 }
