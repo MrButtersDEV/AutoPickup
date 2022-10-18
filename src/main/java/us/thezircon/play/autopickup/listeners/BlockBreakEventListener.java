@@ -29,6 +29,7 @@ import world.bentobox.bentobox.database.objects.Island;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BlockBreakEventListener implements Listener {
@@ -100,16 +101,28 @@ public class BlockBreakEventListener implements Listener {
                         if (island.getCenter().equals(block.getLocation())) {
                             for (Entity ent : loc.getWorld().getNearbyEntities(block.getLocation().add(0, 1, 0), 1, 1, 1)) {
                                 if (ent instanceof Item) {
-                                    if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
-                                        //Player has no space
+
+                                    HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(((Item) ent).getItemStack());
+                                    ent.remove();
+                                    if (leftOver.keySet().size()>0) {
+                                        for (ItemStack item : leftOver.values()) {
+                                            player.getWorld().dropItemNaturally(loc, item);
+                                        }
                                         if (doFullInvMSG) {
                                             player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
                                         }
-                                        return;
-                                    } else {
-                                        player.getInventory().addItem(((Item) ent).getItemStack());
-                                        ent.remove();
                                     }
+
+//                                    if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
+//                                        //Player has no space
+//                                        if (doFullInvMSG) {
+//                                            player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+//                                        }
+//                                        return;
+//                                    } else {
+//                                        player.getInventory().addItem(((Item) ent).getItemStack());
+//                                        ent.remove();
+//                                    }
                                 }
                             }
                         }
@@ -182,10 +195,16 @@ public class BlockBreakEventListener implements Listener {
 
                 for (ItemStack items : chestDrops) {
                     if (items!=null) {
-                        if (player.getInventory().firstEmpty()!=-1) {
-                            player.getInventory().addItem(items);
-                        } else {
-                            player.getWorld().dropItemNaturally(loc, items);
+//                        if (player.getInventory().firstEmpty()!=-1) {
+//                            player.getInventory().add----Item(items);
+//                        } else {
+//                            player.getWorld().dropItemNaturally(loc, items);
+//                        }
+                        HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(items);
+                        if (leftOver.keySet().size()>0) {
+                            for (ItemStack item : leftOver.values()) {
+                                player.getWorld().dropItemNaturally(loc, item);
+                            }
                         }
                     }
                 }
@@ -194,10 +213,16 @@ public class BlockBreakEventListener implements Listener {
                 for (ItemStack items : ((Container) e.getBlock().getState()).getInventory().getContents()) {
 
                     if (items!=null) {
-                        if (player.getInventory().firstEmpty()!=-1) {
-                            player.getInventory().addItem(items);
-                        } else {
-                            player.getWorld().dropItemNaturally(loc, items);
+//                        if (player.getInventory().firstEmpty()!=-1) {
+//                            player.getInventory().add----Item(items);
+//                        } else {
+//                            player.getWorld().dropItemNaturally(loc, items);
+//                        }
+                        HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(items);
+                        if (leftOver.keySet().size()>0) {
+                            for (ItemStack item : leftOver.values()) {
+                                player.getWorld().dropItemNaturally(loc, item);
+                            }
                         }
                     }
 
@@ -213,10 +238,16 @@ public class BlockBreakEventListener implements Listener {
             }
 
             ItemStack drop = new ItemStack(e.getBlock().getType());
-            if (player.getInventory().firstEmpty()!=-1) {
-                player.getInventory().addItem(drop);
-            } else {
-                player.getWorld().dropItemNaturally(loc, drop);
+//            if (player.getInventory().firstEmpty()!=-1) {
+//                player.getInventory().add---Item(drop);
+//            } else {
+//                player.getWorld().dropItemNaturally(loc, drop);
+//            }
+            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
+            if (leftOver.keySet().size()>0) {
+                for (ItemStack item : leftOver.values()) {
+                    player.getWorld().dropItemNaturally(loc, item);
+                }
             }
 
         }
@@ -339,11 +370,18 @@ public class BlockBreakEventListener implements Listener {
             amt++;
             vertBreak(player, loc);
         } else {
-            if (player.getInventory().firstEmpty()!=-1) {
-                player.getInventory().addItem(new ItemStack(type, amt));
-            } else {
-                player.getWorld().dropItemNaturally(loc, new ItemStack(type, amt));
+            ItemStack drop = new ItemStack(type, amt);
+            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
+            if (leftOver.keySet().size()>0) {
+                for (ItemStack item : leftOver.values()) {
+                    player.getWorld().dropItemNaturally(loc, item);
+                }
             }
+//            if (player.getInventory().firstEmpty()!=-1) {
+//                player.getInventory().add---Item(new ItemStack(type, amt));
+//            } else {
+//                player.getWorld().dropItemNaturally(loc, new ItemStack(type, amt));
+//            }
             type = null;
             amt = 1;
             ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

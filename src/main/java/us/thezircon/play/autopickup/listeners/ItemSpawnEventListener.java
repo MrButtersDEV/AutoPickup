@@ -11,6 +11,7 @@ import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.AutoSmelt;
 import us.thezircon.play.autopickup.utils.PickupObjective;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,14 +51,21 @@ public class ItemSpawnEventListener implements Listener {
             ItemStack item = e.getEntity().getItemStack();
             Player player = po.getPlayer();
             boolean doSmelt = PLUGIN.auto_smelt_blocks.contains(player);
-            if (player.getInventory().firstEmpty()!=-1) {
-                e.getEntity().remove();
-                if (doSmelt) {
-                    player.getInventory().addItem(AutoSmelt.smelt(item, player));
-                } else {
-                    player.getInventory().addItem(item);
+            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(item);
+            e.getEntity().remove();
+            if (leftOver.keySet().size()>0) {
+                for (ItemStack items : leftOver.values()) {
+                    player.getWorld().dropItemNaturally(loc, items);
                 }
             }
+//            if (player.getInventory().firstEmpty()!=-1) {
+//                e.getEntity().remove();
+//                if (doSmelt) {
+//                    player.getInventory().addItem(AutoSmelt.smelt(item, player));
+//                } else {
+//                    player.getInventory().addItem(item);
+//                }
+//            }
         }
     }
 

@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.AutoSmelt;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class BlockDropItemEventListener implements Listener {
@@ -72,10 +73,21 @@ public class BlockDropItemEventListener implements Listener {
                 }
 
                 if (doSmelt) {
-                    player.getInventory().addItem(AutoSmelt.smelt(drop, player));
-                } else {
-                    player.getInventory().addItem(drop);
+                    drop = AutoSmelt.smelt(drop, player);
                 }
+
+                HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
+                if (leftOver.keySet().size()>0) {
+                    for (ItemStack item : leftOver.values()) {
+                        player.getWorld().dropItemNaturally(loc, item);
+                    }
+                }
+
+//                if (doSmelt) {
+//                    player.getInventory().addItem(AutoSmelt.smelt(drop, player));
+//                } else {
+//                    player.getInventory().addItem(drop);
+//                }
                 i.remove();
             }
 

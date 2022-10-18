@@ -14,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
 
+import java.util.HashMap;
+
 public class PlayerInteractEventListener implements Listener {
 
     private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
@@ -46,10 +48,19 @@ public class PlayerInteractEventListener implements Listener {
                                 Item item = (Item) entity;
                                 ItemStack items = item.getItemStack();
                                 if (items.getType().equals(Material.SWEET_BERRIES)) {
-                                    if (player.getInventory().firstEmpty()!=-1) {
-                                        player.getInventory().addItem(items);
-                                        item.remove();
+
+                                    HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(items);
+                                    item.remove();
+                                    if (leftOver.keySet().size()>0) {
+                                        for (ItemStack drops : leftOver.values()) {
+                                            player.getWorld().dropItemNaturally(loc, drops);
+                                        }
                                     }
+
+//                                    if (player.getInventory().firstEmpty()!=-1) {
+//                                        player.getInventory().addItem(items);
+//                                        item.remove();
+//                                    }
                                 }
 
                             }

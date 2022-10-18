@@ -10,6 +10,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,15 +67,28 @@ public class EntityDeathEventListener implements Listener {
             Iterator<ItemStack> iter = e.getDrops().iterator();
             while (iter.hasNext()) {
                 ItemStack drops = iter.next();
-                if (player.getInventory().firstEmpty() != -1) { // has space
-                    player.getInventory().addItem(drops);
-                    iter.remove();
-                } else { // inv full
+
+                HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drops);
+                iter.remove();
+                if (leftOver.keySet().size()>0) {
+                    for (ItemStack item : leftOver.values()) {
+                        player.getWorld().dropItemNaturally(loc, item);
+                    }
                     if (doFullInvMSG) {
                         player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
                     }
-                    return;
                 }
+
+
+//                if (player.getInventory().firstEmpty() != -1) { // has space
+//                    player.getInventory().addItem(drops);
+//                    iter.remove();
+//                } else { // inv full
+//                    if (doFullInvMSG) {
+//                        player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+//                    }
+//                    return;
+//                }
             }
             e.getDrops().clear();
         }
