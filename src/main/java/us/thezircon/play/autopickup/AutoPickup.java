@@ -37,6 +37,9 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingEpicFurnaces = false; //EpicFurnaces - Songoda
     public static boolean usingWildChests = false; // WildChests - BG Development
 
+    public static boolean usingPFHoppers = false; // Play.PeacefulFarms.Net
+    public static boolean usingPFMoreHoppers = false; // Patch for PF
+
     public static boolean usingPlaceholderAPI = false; // Papi - clip
 
     public static ArrayList<String> worldsBlacklist = null;
@@ -94,6 +97,16 @@ public final class AutoPickup extends JavaPlugin {
         // For placeholders
         if ((getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)) {
             usingPlaceholderAPI = true;
+        }
+
+        // Peaceful Farms - Hoppers Patch
+        // PFHoppers
+        if ((getServer().getPluginManager().getPlugin("PFHoppers") != null)) {
+            usingPFHoppers = true;
+        }
+        // PFMoreHoppers
+        if ((getServer().getPluginManager().getPlugin("PFMoreHoppers") != null)) {
+            usingPFMoreHoppers = true;
         }
 
         messages = new Messages();
