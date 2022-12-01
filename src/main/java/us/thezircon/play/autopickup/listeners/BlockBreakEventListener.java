@@ -131,6 +131,11 @@ public class BlockBreakEventListener implements Listener {
             }
         }.runTaskLater(PLUGIN, 1);
 
+        ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
+        AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
+        ///////////////////////////////////////////////////////////////////////////////////////
+
         // Mend Items & Give Player XP
         int xp = e.getExpToDrop();
         player.giveExp(xp); // Give player XP
@@ -146,11 +151,6 @@ public class BlockBreakEventListener implements Listener {
             } catch (NullPointerException ignored) {}
         }
         e.setExpToDrop(0); // Remove default XP
-
-        ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
-        AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
-        ///////////////////////////////////////////////////////////////////////////////////////
 
         // Deal with Containers
         if (block.getState() instanceof Container) {
@@ -179,7 +179,7 @@ public class BlockBreakEventListener implements Listener {
 
             // Peaceful Farms - PFMoreHoppers Patch
             if (block.getState() instanceof Hopper && AutoPickup.usingPFMoreHoppers) {
-                NamespacedKey morePFHoppers = new NamespacedKey(PLUGIN.getServer().getPluginManager().getPlugin("PFMoreHoppers"), "pfmorehoppers:pfhopper-variant");
+                NamespacedKey morePFHoppers = new NamespacedKey(PLUGIN.getServer().getPluginManager().getPlugin("PFMoreHoppers"), "PFHopper-Variant");
                 Container con = (Container) block.getState();
                 if (con.getPersistentDataContainer().getKeys().contains(morePFHoppers)) {
                     return;
