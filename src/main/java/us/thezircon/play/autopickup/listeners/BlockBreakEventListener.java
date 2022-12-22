@@ -193,7 +193,7 @@ public class BlockBreakEventListener implements Listener {
                 }
             }
 
-            e.setDropItems(false); // Cancel drops
+            //e.setDropItems(false); // Cancel drops
 
             if (((Container) block.getState()).getInventory() instanceof DoubleChestInventory) {
                 Chest chest = (Chest) block.getState();
@@ -255,18 +255,18 @@ public class BlockBreakEventListener implements Listener {
                 }
             }
 
-            ItemStack drop = new ItemStack(e.getBlock().getType());
 //            if (player.getInventory().firstEmpty()!=-1) {
 //                player.getInventory().add---Item(drop);
 //            } else {
 //                player.getWorld().dropItemNaturally(loc, drop);
 //            }
-            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
-            if (leftOver.keySet().size()>0) {
-                for (ItemStack item : leftOver.values()) {
-                    player.getWorld().dropItemNaturally(loc, item);
-                }
-            }
+//            ItemStack drop = new ItemStack(e.getBlock().getType());
+//            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
+//            if (leftOver.keySet().size()>0) {
+//                for (ItemStack item : leftOver.values()) {
+//                    player.getWorld().dropItemNaturally(loc, item);
+//                }
+//            }
 
         }
 

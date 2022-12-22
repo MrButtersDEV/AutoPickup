@@ -41,18 +41,18 @@ public class BlockDropItemEventListener implements Listener {
             return;
         }
 
-        if (block.getState() instanceof Container) {
-            return; // Containers are handled in block break event
-        }
+//        if (block.getState() instanceof Container) {
+//            return; // Containers are handled in block break event
+//        }
 
         if (PLUGIN.autopickup_list.contains(player)) { // Player has auto enabled
-            for (Entity en : e.getItems()) {
+            for (Item i : e.getItems()) {
 
-                if (en==null || en.isDead() || !en.isValid()) {
-                    continue; // TEST
-                }
+//                if (i==null || i.isDead() || !i.isValid()) {
+//                    System.out.println("RAR " + i.getItemStack().getType() + " " + (i==null) + " "+ (i.isDead()) + " " + (!i.isValid()));
+//                    continue; // TEST
+//                }
 
-                Item i = (Item) en;
                 ItemStack drop = i.getItemStack();
 
                 if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
