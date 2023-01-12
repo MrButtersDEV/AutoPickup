@@ -36,6 +36,7 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingQuickShop = false; //QuickShop - Ghost_chu (reremake)
     public static boolean usingEpicFurnaces = false; //EpicFurnaces - Songoda
     public static boolean usingWildChests = false; // WildChests - BG Development
+    public static boolean usingMythicMobs = false; // MythicMobs
 
     public static boolean usingPFHoppers = false; // Play.PeacefulFarms.Net
     public static boolean usingPFMoreHoppers = false; // Patch for PF
@@ -99,6 +100,11 @@ public final class AutoPickup extends JavaPlugin {
             usingPlaceholderAPI = true;
         }
 
+        // MythicMobs
+        if ((getServer().getPluginManager().getPlugin("MythicMobs") != null)) {
+            usingMythicMobs = true;
+        }
+
         // Peaceful Farms - Hoppers Patch
         // PFHoppers
         if ((getServer().getPluginManager().getPlugin("PFHoppers") != null)) {
@@ -119,6 +125,10 @@ public final class AutoPickup extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDropItemEventListener(), this);
         getServer().getPluginManager().registerEvents(new ItemSpawnEventListener(), this);
+
+        if (usingMythicMobs) {
+            getServer().getPluginManager().registerEvents(new MythicMobListener(), this);
+        }
 
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
