@@ -1,6 +1,5 @@
 package us.thezircon.play.autopickup.listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,7 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
-import us.thezircon.play.autopickup.utils.AutoSmelt;
 import us.thezircon.play.autopickup.utils.PickupObjective;
 
 import java.util.HashMap;
@@ -24,7 +22,6 @@ public class ItemSpawnEventListener implements Listener {
     @EventHandler
     public void onSpawn(ItemSpawnEvent e) {
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
-
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
 
         if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(e.getLocation().getWorld().getName())) {
@@ -55,7 +52,7 @@ public class ItemSpawnEventListener implements Listener {
             e.getEntity().remove();
             if (leftOver.keySet().size()>0) {
                 for (ItemStack items : leftOver.values()) {
-                    player.getWorld().dropItemNaturally(loc, items);
+                    player.getWorld().dropItemNaturally(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).add(.5,0,.5), items);
                 }
             }
 //            if (player.getInventory().firstEmpty()!=-1) {
