@@ -161,7 +161,7 @@ public class BlockBreakEventListener implements Listener {
 
             // Upgradable Hoppers Patch
             if (block.getState() instanceof Hopper && AutoPickup.usingUpgradableHoppers) {
-                NamespacedKey upgHoppers = new NamespacedKey(PLUGIN.getServer().getPluginManager().getPlugin("UpgradeableHoppers"), "upgradeablehoppers:o");
+                NamespacedKey upgHoppers = new NamespacedKey(PLUGIN.getServer().getPluginManager().getPlugin("UpgradeableHoppers"), "o");
                 Container con = (Container) block.getState();
                 if (con.getPersistentDataContainer().getKeys().contains(upgHoppers)) {
                     return;
