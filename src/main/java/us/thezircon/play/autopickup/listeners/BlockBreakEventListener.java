@@ -38,8 +38,14 @@ public class BlockBreakEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent e) {
-        Block block = e.getBlock();
+
         Player player = e.getPlayer();
+
+        if (!PLUGIN.autopickup_list.contains(player)) {
+            return;
+        }
+
+        Block block = e.getBlock();
         Location loc = e.getBlock().getLocation();
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
@@ -54,10 +60,6 @@ public class BlockBreakEventListener implements Listener {
             if (blacklist.contains(block.getType().toString())) { // Stops resets the loop skipping the item & not removing it
                 return;
             }
-        }
-
-        if (!PLUGIN.autopickup_list.contains(player)) {
-            return;
         }
 
         // QuickShop chest patch

@@ -34,6 +34,8 @@ public class MythicMobListener implements Listener {
             return;
         }
 
+        if (!PLUGIN.autopickup_list_mobs.contains(player)) return;
+
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
 
         Location loc = e.getKiller().getLocation();
@@ -50,24 +52,24 @@ public class MythicMobListener implements Listener {
             }
         }
 
-        if (PLUGIN.autopickup_list_mobs.contains(player)) {
-            // Drops
-            Iterator<ItemStack> iter = e.getDrops().iterator();
-            while (iter.hasNext()) {
-                ItemStack drops = iter.next();
-                HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drops);
-                iter.remove();
-                if (leftOver.keySet().size()>0) {
-                    for (ItemStack item : leftOver.values()) {
-                        player.getWorld().dropItemNaturally(loc, item);
-                    }
-                    if (doFullInvMSG) {
-                        player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
-                    }
+
+        // Drops
+        Iterator<ItemStack> iter = e.getDrops().iterator();
+        while (iter.hasNext()) {
+            ItemStack drops = iter.next();
+            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drops);
+            iter.remove();
+            if (leftOver.keySet().size()>0) {
+                for (ItemStack item : leftOver.values()) {
+                    player.getWorld().dropItemNaturally(loc, item);
+                }
+                if (doFullInvMSG) {
+                    player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
                 }
             }
-            e.getDrops().clear();
         }
+        e.getDrops().clear();
+
     }
 
 }
