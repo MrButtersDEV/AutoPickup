@@ -64,7 +64,17 @@ public class MythicMobListener implements Listener {
                     player.getWorld().dropItemNaturally(loc, item);
                 }
                 if (doFullInvMSG) {
-                    player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+                    long secondsLeft;
+                    long cooldown = 15000; // 15 sec
+                    if (AutoPickup.lastInvFullNotification.containsKey(player.getUniqueId())) {
+                        secondsLeft = (AutoPickup.lastInvFullNotification.get(player.getUniqueId())/1000)+ cooldown/1000 - (System.currentTimeMillis()/1000);
+                    } else {
+                        secondsLeft = 0;
+                    }
+                    if (secondsLeft<=0) {
+                        player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+                        AutoPickup.lastInvFullNotification.put(player.getUniqueId(), System.currentTimeMillis());
+                    }
                 }
             }
         }

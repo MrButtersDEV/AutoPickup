@@ -49,6 +49,9 @@ public final class AutoPickup extends JavaPlugin {
     public static HashMap<String, PickupObjective> customItemPatch = new HashMap<>();
     public static HashSet<UUID> droppedItems = new HashSet<>();
 
+    // Notification Cooldown
+    public static HashMap<UUID, Long> lastInvFullNotification = new HashMap<>();
+
     private static AutoPickup instance;
 
     @Override
@@ -120,11 +123,11 @@ public final class AutoPickup extends JavaPlugin {
         // Listeners
         getServer().getPluginManager().registerEvents(new BlockDropItemEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
-        getServer().getPluginManager().registerEvents(new BlockBreakEventListener(), this);
+//        getServer().getPluginManager().registerEvents(new BlockBreakEventListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDeathEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDropItemEventListener(), this);
-        getServer().getPluginManager().registerEvents(new ItemSpawnEventListener(), this);
+//        getServer().getPluginManager().registerEvents(new ItemSpawnEventListener(), this);
 
         if (usingMythicMobs) {
             getServer().getPluginManager().registerEvents(new MythicMobListener(), this);

@@ -61,7 +61,19 @@ public class BlockDropItemEventListener implements Listener {
 
             if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
                 //Player has no space
-                if (doFullInvMSG) {player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());}
+                if (doFullInvMSG) {
+                    long secondsLeft;
+                    long cooldown = 15000; // 15 sec
+                    if (AutoPickup.lastInvFullNotification.containsKey(player.getUniqueId())) {
+                        secondsLeft = (AutoPickup.lastInvFullNotification.get(player.getUniqueId())/1000)+ cooldown/1000 - (System.currentTimeMillis()/1000);
+                    } else {
+                        secondsLeft = 0;
+                    }
+                    if (secondsLeft<=0) {
+                        player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+                        AutoPickup.lastInvFullNotification.put(player.getUniqueId(), System.currentTimeMillis());
+                    }
+                }
 
                 if (voidOnFullInv) {
                     i.remove();
