@@ -3,6 +3,7 @@ package us.thezircon.play.autopickup.listeners;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,7 @@ public class ItemSpawnEventListener implements Listener {
 
     ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onSpawn(ItemSpawnEvent e) {
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");

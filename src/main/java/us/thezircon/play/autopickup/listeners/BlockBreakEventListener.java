@@ -131,11 +131,6 @@ public class BlockBreakEventListener implements Listener {
             }
         }.runTaskLater(PLUGIN, 1);
 
-        ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
-        AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
-        ///////////////////////////////////////////////////////////////////////////////////////
-
         // Mend Items & Give Player XP
         int xp = e.getExpToDrop();
         player.giveExp(xp); // Give player XP
@@ -268,7 +263,13 @@ public class BlockBreakEventListener implements Listener {
 //                }
 //            }
 
+            return;
         }
+
+        ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
+        AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
+        ///////////////////////////////////////////////////////////////////////////////////////
 
         TallCrops crops = PLUGIN.getCrops();
         ArrayList<Material> verticalReq = crops.getVerticalReq();
