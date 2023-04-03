@@ -29,6 +29,9 @@ public class EntityDeathEventListener implements Listener {
         }
 
         Player player = e.getEntity().getKiller();
+
+        if (!PLUGIN.autopickup_list_mobs.contains(player)) return;
+        
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
 
         Location loc = e.getEntity().getKiller().getLocation();
@@ -45,52 +48,52 @@ public class EntityDeathEventListener implements Listener {
             }
         }
 
-        if (PLUGIN.autopickup_list_mobs.contains(player)) {
-
-            // Mend Items & Give Player XP
-            int xp = e.getDroppedExp();
-            player.giveExp(xp); // Give player XP
-
-            // Mend
-            mend(player.getInventory().getItemInMainHand(), xp);
-            mend(player.getInventory().getItemInOffHand(), xp);
-            ItemStack armor[] = player.getInventory().getArmorContents();
-            for (ItemStack i : armor)
-            {
-                try {
-                    mend(i, xp);
-                } catch (NullPointerException ignored) {}
-            }
-            e.setDroppedExp(0); // Remove default XP
-
-            // Drops
-            Iterator<ItemStack> iter = e.getDrops().iterator();
-            while (iter.hasNext()) {
-                ItemStack drops = iter.next();
-
-                HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drops);
-                iter.remove();
-                if (leftOver.keySet().size()>0) {
-                    for (ItemStack item : leftOver.values()) {
-                        player.getWorld().dropItemNaturally(loc, item);
-                    }
-                    if (doFullInvMSG) {
-                        player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
-                    }
-                }
 
 
-//                if (player.getInventory().firstEmpty() != -1) { // has space
-//                    player.getInventory().addItem(drops);
-//                    iter.remove();
-//                } else { // inv full
-//                    if (doFullInvMSG) {
-//                        player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
-//                    }
-//                    return;
-//                }
-            }
-            e.getDrops().clear();
+        // Mend Items & Give Player XP
+        int xp = e.getDroppedExp();
+        player.giveExp(xp); // Give player XP
+
+        // Mend
+        mend(player.getInventory().getItemInMainHand(), xp);
+        mend(player.getInventory().getItemInOffHand(), xp);
+        ItemStack armor[] = player.getInventory().getArmorContents();
+        for (ItemStack i : armor)
+        {
+            try {
+                mend(i, xp);
+            } catch (NullPointerException ignored) {}
         }
+        e.setDroppedExp(0); // Remove default XP
+
+        // Drops
+        Iterator<ItemStack> iter = e.getDrops().iterator();
+        while (iter.hasNext()) {
+            ItemStack drops = iter.next();
+
+            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drops);
+            iter.remove();
+            if (leftOver.keySet().size()>0) {
+                for (ItemStack item : leftOver.values()) {
+                    player.getWorld().dropItemNaturally(loc, item);
+                }
+                if (doFullInvMSG) {
+                    player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+                }
+            }
+
+
+//            if (player.getInventory().firstEmpty() != -1) { // has space
+//                player.getInventory().addItem(drops);
+//                iter.remove();
+//            } else { // inv full
+//                if (doFullInvMSG) {
+//                    player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+//                }
+//                return;
+//            }
+        }
+        e.getDrops().clear();
+
     }
 }

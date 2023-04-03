@@ -23,7 +23,11 @@ public class BlockDropItemEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDrop(BlockDropItemEvent e) {
+
         Player player = e.getPlayer();
+
+        if (!PLUGIN.autopickup_list.contains(player)) return; // Player has auto enabled
+
         Block block = e.getBlock();
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
@@ -45,53 +49,53 @@ public class BlockDropItemEventListener implements Listener {
 //            return; // Containers are handled in block break event
 //        }
 
-        if (PLUGIN.autopickup_list.contains(player)) { // Player has auto enabled
-            for (Item i : e.getItems()) {
+
+        for (Item i : e.getItems()) {
 
 //                if (i==null || i.isDead() || !i.isValid()) {
 //                    System.out.println("RAR " + i.getItemStack().getType() + " " + (i==null) + " "+ (i.isDead()) + " " + (!i.isValid()));
 //                    continue; // TEST
 //                }
 
-                ItemStack drop = i.getItemStack();
+            ItemStack drop = i.getItemStack();
 
-                if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
-                    //Player has no space
-                    if (doFullInvMSG) {player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());}
+            if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
+                //Player has no space
+                if (doFullInvMSG) {player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());}
 
-                    if (voidOnFullInv) {
-                        i.remove();
-                    }
-
-                    return;
+                if (voidOnFullInv) {
+                    i.remove();
                 }
 
-                if (doBlacklist) { // Checks if blacklist is enabled
-                    if (blacklist.contains(drop.getType().toString())) { // Stops resets the loop skipping the item & not removing it
-                        continue;
-                    }
-                }
-
-                if (doSmelt) {
-                    drop = AutoSmelt.smelt(drop, player);
-                }
-
-                HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
-                if (leftOver.keySet().size()>0) {
-                    for (ItemStack item : leftOver.values()) {
-                        player.getWorld().dropItemNaturally(loc, item);
-                    }
-                }
-
-//                if (doSmelt) {
-//                    player.getInventory().addItem(AutoSmelt.smelt(drop, player));
-//                } else {
-//                    player.getInventory().addItem(drop);
-//                }
-                i.remove();
+                return;
             }
 
+            if (doBlacklist) { // Checks if blacklist is enabled
+                if (blacklist.contains(drop.getType().toString())) { // Stops resets the loop skipping the item & not removing it
+                    continue;
+                }
+            }
+
+            if (doSmelt) {
+                drop = AutoSmelt.smelt(drop, player);
+            }
+
+            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
+            if (leftOver.keySet().size()>0) {
+                for (ItemStack item : leftOver.values()) {
+                    player.getWorld().dropItemNaturally(loc, item);
+                }
+            }
+
+//            if (doSmelt) {
+//                player.getInventory().addItem(AutoSmelt.smelt(drop, player));
+//            } else {
+//                player.getInventory().addItem(drop);
+//            }
+            i.remove();
         }
+
+
 
     }
 }
