@@ -53,7 +53,6 @@ public class BlockDropItemEventListener implements Listener {
 //            return; // Containers are handled in block break event
 //        }
 
-
         for (Item i : e.getItems()) {
 //            i.setThrower(new UUID(0,0));
 //                if (i==null || i.isDead() || !i.isValid()) {
@@ -97,10 +96,7 @@ public class BlockDropItemEventListener implements Listener {
                 }
 
                 for (ItemStack item : leftOver.values()) {
-                    Item dropped = player.getWorld().dropItemNaturally(loc, item);
-                    dropped.setThrower(new UUID(0,0));
-                    System.out.println("DDrop : " + dropped.getUniqueId());
-                    System.out.println("DDrop :     " + dropped.getThrower());
+                    player.getWorld().dropItemNaturally(loc, item);
                 }
             }
 

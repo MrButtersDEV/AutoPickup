@@ -121,7 +121,7 @@ public final class AutoPickup extends JavaPlugin {
         messages = new Messages();
 
         // Listeners
-//        getServer().getPluginManager().registerEvents(new BlockDropItemEventListener(), this);
+        getServer().getPluginManager().registerEvents(new BlockDropItemEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), this);
         getServer().getPluginManager().registerEvents(new BlockBreakEventListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDeathEventListener(), this);
