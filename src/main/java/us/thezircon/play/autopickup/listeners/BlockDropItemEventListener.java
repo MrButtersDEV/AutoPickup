@@ -13,15 +13,19 @@ import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.AutoSmelt;
+import us.thezircon.play.autopickup.utils.PickupObjective;
 
+import java.time.Instant;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 public class BlockDropItemEventListener implements Listener {
 
     private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDrop(BlockDropItemEvent e) {
 
         Player player = e.getPlayer();
@@ -51,7 +55,7 @@ public class BlockDropItemEventListener implements Listener {
 
 
         for (Item i : e.getItems()) {
-
+//            i.setThrower(new UUID(0,0));
 //                if (i==null || i.isDead() || !i.isValid()) {
 //                    System.out.println("RAR " + i.getItemStack().getType() + " " + (i==null) + " "+ (i.isDead()) + " " + (!i.isValid()));
 //                    continue; // TEST
@@ -59,7 +63,19 @@ public class BlockDropItemEventListener implements Listener {
 
             ItemStack drop = i.getItemStack();
 
-            if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
+            if (doBlacklist) { // Checks if blacklist is enabled
+                if (blacklist.contains(drop.getType().toString())) { // Stops resets the loop skipping the item & not removing it
+                    continue;
+                }
+            }
+
+            if (doSmelt) {
+                drop = AutoSmelt.smelt(drop, player);
+            }
+
+            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
+            if (leftOver.keySet().size()>0) {
+
                 //Player has no space
                 if (doFullInvMSG) {
                     long secondsLeft;
@@ -77,25 +93,14 @@ public class BlockDropItemEventListener implements Listener {
 
                 if (voidOnFullInv) {
                     i.remove();
+                    return;
                 }
 
-                return;
-            }
-
-            if (doBlacklist) { // Checks if blacklist is enabled
-                if (blacklist.contains(drop.getType().toString())) { // Stops resets the loop skipping the item & not removing it
-                    continue;
-                }
-            }
-
-            if (doSmelt) {
-                drop = AutoSmelt.smelt(drop, player);
-            }
-
-            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
-            if (leftOver.keySet().size()>0) {
                 for (ItemStack item : leftOver.values()) {
-                    player.getWorld().dropItemNaturally(loc, item);
+                    Item dropped = player.getWorld().dropItemNaturally(loc, item);
+                    dropped.setThrower(new UUID(0,0));
+                    System.out.println("DDrop : " + dropped.getUniqueId());
+                    System.out.println("DDrop :     " + dropped.getThrower());
                 }
             }
 

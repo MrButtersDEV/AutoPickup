@@ -1,6 +1,7 @@
 package us.thezircon.play.autopickup.listeners;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,7 +21,7 @@ public class ItemSpawnEventListener implements Listener {
 
     ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onSpawn(ItemSpawnEvent e) {
         boolean doBlacklist = PLUGIN.getBlacklistConf().getBoolean("doBlacklisted");
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
@@ -45,17 +46,25 @@ public class ItemSpawnEventListener implements Listener {
         Location loc = e.getLocation();
         String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
         if (AutoPickup.customItemPatch.containsKey(key)) {
+
+//            UUID testUUID = e.getEntity().getThrower();
+//            if (testUUID!=null && testUUID.equals(new UUID(0, 0))) {
+//                return;
+//            }
             PickupObjective po = AutoPickup.customItemPatch.get(key);
             ItemStack item = e.getEntity().getItemStack();
             Player player = po.getPlayer();
             boolean doSmelt = PLUGIN.auto_smelt_blocks.contains(player);
             HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(item);
-            e.getEntity().remove();
-            if (leftOver.keySet().size()>0) {
-                for (ItemStack items : leftOver.values()) {
-                    player.getWorld().dropItemNaturally(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).add(.5,0,.5), items);
-                }
+            if (leftOver.keySet().size()<=0) {
+                e.getEntity().remove();
             }
+//            if (leftOver.keySet().size()>0) {
+//                for (ItemStack items : leftOver.values()) {
+//                    Item dropped = player.getWorld().dropItemNaturally(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).add(.5,0,.5), items);
+//                    dropped.setThrower(new UUID(0, 0));
+//                }
+//            }
 //            if (player.getInventory().firstEmpty()!=-1) {
 //                e.getEntity().remove();
 //                if (doSmelt) {
