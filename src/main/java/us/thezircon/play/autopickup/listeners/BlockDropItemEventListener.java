@@ -2,8 +2,6 @@ package us.thezircon.play.autopickup.listeners;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.block.Container;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,13 +11,9 @@ import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.AutoSmelt;
-import us.thezircon.play.autopickup.utils.PickupObjective;
 
-import java.time.Instant;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 
 public class BlockDropItemEventListener implements Listener {
 
