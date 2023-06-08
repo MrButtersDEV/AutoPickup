@@ -10,8 +10,16 @@ public class HexFormat {
 
     private static final Pattern pattern = Pattern.compile("&#[a-fA-F0-9]{6}");
 
+    public static boolean isAboveMinor(int version) {
+        String[] split = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
+        String minorVer = split[1];
+        return Integer.parseInt(minorVer) >= version;
+    }
+
     public static String format(String msg) {
-        if (Bukkit.getVersion().contains("1.17") || Bukkit.getVersion().contains("1.16") || Bukkit.getVersion().contains("1.18") || Bukkit.getVersion().contains("1.19")) {
+        String[] split = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
+        String minorVer = split[1];
+        if (Integer.parseInt(minorVer) >= 16) {
             Matcher match = pattern.matcher(msg);
             while (match.find()) {
                 String color = msg.substring(match.start(), match.end());

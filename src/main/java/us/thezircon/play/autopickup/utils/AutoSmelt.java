@@ -38,9 +38,11 @@ public class AutoSmelt {
 
             if (((FurnaceRecipe) recipe).getInput().getType() != itemStack.getType()) continue;
             result = recipe.getResult();
-            player.giveExp((int) ((FurnaceRecipe) recipe).getExperience());
+            player.giveExp(((int) ((FurnaceRecipe) recipe).getExperience())*itemStack.getAmount());
             break;
         }
+
+        result.setAmount(itemStack.getAmount());
 
         return result;
     }
