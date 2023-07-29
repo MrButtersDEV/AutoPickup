@@ -175,22 +175,22 @@ public class BlockBreakEventListener implements Listener {
             }
 
             // Peaceful Farms - PFHoppers Patch
-            if (block.getState() instanceof Hopper && AutoPickup.usingPFHoppers) {
+            /*if (block.getState() instanceof Hopper && AutoPickup.usingPFHoppers) {
                 Hopper hopper = (Hopper) block.getState();
                 try {
                     if (hopper.getCustomName().contains("PF Hopper"))
                         return;
                 } catch (NullPointerException ignored) {}
-            }
+            }*/
 
             // Peaceful Farms - PFMoreHoppers Patch
-            if (block.getState() instanceof Hopper && AutoPickup.usingPFMoreHoppers) {
+            /*if (block.getState() instanceof Hopper && AutoPickup.usingPFMoreHoppers) {
                 NamespacedKey morePFHoppers = new NamespacedKey(PLUGIN.getServer().getPluginManager().getPlugin("PFMoreHoppers"), "PFHopper-Variant");
                 Container con = (Container) block.getState();
                 if (con.getPersistentDataContainer().getKeys().contains(morePFHoppers)) {
                     return;
                 }
-            }
+            }*/
 
             // WildChests patch
             if (AutoPickup.usingWildChests) {

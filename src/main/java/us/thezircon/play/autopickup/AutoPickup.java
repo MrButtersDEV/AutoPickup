@@ -38,8 +38,8 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingWildChests = false; // WildChests - BG Development
     public static boolean usingMythicMobs = false; // MythicMobs
 
-    public static boolean usingPFHoppers = false; // Play.PeacefulFarms.Net
-    public static boolean usingPFMoreHoppers = false; // Patch for PF
+    //public static boolean usingPFHoppers = false; // Play.PeacefulFarms.Net
+    //public static boolean usingPFMoreHoppers = false; // Patch for PF
 
     public static boolean usingPlaceholderAPI = false; // Papi - clip
 
@@ -110,13 +110,13 @@ public final class AutoPickup extends JavaPlugin {
 
         // Peaceful Farms - Hoppers Patch
         // PFHoppers
-        if ((getServer().getPluginManager().getPlugin("PFHoppers") != null)) {
+        /*if ((getServer().getPluginManager().getPlugin("PFHoppers") != null)) {
             usingPFHoppers = true;
-        }
+        }*/
         // PFMoreHoppers
-        if ((getServer().getPluginManager().getPlugin("PFMoreHoppers") != null)) {
+        /*if ((getServer().getPluginManager().getPlugin("PFMoreHoppers") != null)) {
             usingPFMoreHoppers = true;
-        }
+        }*/
 
         messages = new Messages();
 
