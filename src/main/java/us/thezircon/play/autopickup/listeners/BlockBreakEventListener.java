@@ -44,6 +44,18 @@ public class BlockBreakEventListener implements Listener {
             return;
         }
 
+        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
+            @Override
+            public void run() {
+                if (!player.hasPermission("autopickup.pickup.mined")) {
+                    PLUGIN.autopickup_list.remove(player);
+                }
+                if (!player.hasPermission("autopickup.pickup.mined.autosmelt")) {
+                    PLUGIN.auto_smelt_blocks.remove(player);
+                }
+            }
+        });
+
         Block block = e.getBlock();
         Location loc = e.getBlock().getLocation();
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");

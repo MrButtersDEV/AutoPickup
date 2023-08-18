@@ -5,9 +5,11 @@ import org.bukkit.ChatColor;
 import us.thezircon.play.autopickup.AutoPickup;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import static com.google.common.net.HttpHeaders.USER_AGENT;
@@ -58,7 +60,17 @@ public class VersionChk {
 
         // Config Version:
         double configVersion = PLUGIN.getConfig().getDouble("ConfigVersion");
+        if (configVersion<=1.2) {
+            PLUGIN.getConfig().set("ConfigVersion", 1.3);
+            PLUGIN.getBlacklistConf().set("doAutoSmeltBlacklist", false);
+            PLUGIN.getBlacklistConf().set("AutoSmeltBlacklist", Arrays.asList("OAK_LOG"));
 
+            File conf = new File(PLUGIN.getDataFolder(), "config.yml");
+            File fileBlacklist = new File(PLUGIN.getDataFolder(), "blacklist.yml");
+
+            PLUGIN.getConfig().save(conf);
+            PLUGIN.getBlacklistConf().save(fileBlacklist);
+        }
 
 
     }

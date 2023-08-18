@@ -17,6 +17,7 @@
 #Set to "true" if you would like to enable the blacklist
 doBlacklisted: false
 doBlacklistedEntities: true
+doAutoSmeltBlacklist: false
 
 #By listing blocks below you are adding them to the blacklist therefore causing them to drop to the ground.
 Blacklisted:
@@ -28,3 +29,7 @@ BlacklistedEntities:
 
 BlacklistedWorlds:
   - example
+
+#These materials will be ignored when auto smelt is enabled. Only items that can be smelted should be added.
+AutoSmeltBlacklist:
+  - OAK_LOG

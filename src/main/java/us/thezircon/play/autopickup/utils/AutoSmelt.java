@@ -5,10 +5,13 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
+import us.thezircon.play.autopickup.AutoPickup;
 
 import java.util.*;
 
 public class AutoSmelt {
+
+    private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
 
     public boolean isAutoSmeltEnabled = false;
     public static Material[] ignore = {Material.COAL_ORE, Material.REDSTONE_ORE, Material.DIAMOND_ORE, Material.EMERALD_ORE, Material.LAPIS_ORE, Material.NETHER_QUARTZ_ORE};
@@ -19,8 +22,13 @@ public class AutoSmelt {
     }
 
     public static ItemStack smelt(ItemStack itemStack, Player player) {
+        List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("AutoSmeltBlacklist");
 
         if (ignoreMaterials.contains(itemStack.getType())) {
+            return itemStack;
+        }
+
+        if (blacklist.contains(itemStack.getType().toString())) {
             return itemStack;
         }
 

@@ -1,5 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -31,7 +32,16 @@ public class EntityDeathEventListener implements Listener {
         Player player = e.getEntity().getKiller();
 
         if (!PLUGIN.autopickup_list_mobs.contains(player)) return;
-        
+
+        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
+            @Override
+            public void run() {
+                if (!player.hasPermission("autopickup.pickup.entities")) {
+                    PLUGIN.autopickup_list_mobs.remove(player);
+                }
+            }
+        });
+
         boolean doFullInvMSG = PLUGIN.getConfig().getBoolean("doFullInvMSG");
 
         Location loc = e.getEntity().getKiller().getLocation();
