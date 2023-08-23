@@ -36,6 +36,10 @@ public class EntityDeathEventListener implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
             @Override
             public void run() {
+                boolean requirePermsAUTO = PLUGIN.getConfig().getBoolean("requirePerms.autopickup");
+                if (!requirePermsAUTO) {
+                    return;
+                }
                 if (!player.hasPermission("autopickup.pickup.entities")) {
                     PLUGIN.autopickup_list_mobs.remove(player);
                 }
