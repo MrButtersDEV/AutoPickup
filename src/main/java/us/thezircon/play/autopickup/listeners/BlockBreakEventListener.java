@@ -51,10 +51,10 @@ public class BlockBreakEventListener implements Listener {
                 if (!requirePermsAUTO) {
                     return;
                 }
-                if (!player.hasPermission("autopickup.pickup.mined")) {
+                if (!player.hasPermission("autopickup.pickup.mined") && !player.hasPermission("autopickup.pickup.mined.autoenable")) {
                     PLUGIN.autopickup_list.remove(player);
                 }
-                if (!player.hasPermission("autopickup.pickup.mined.autosmelt")) {
+                if (!player.hasPermission("autopickup.pickup.mined.autosmelt") && !player.hasPermission("autopickup.pickup.mined.autosmelt.autoenable")) {
                     PLUGIN.auto_smelt_blocks.remove(player);
                 }
             }

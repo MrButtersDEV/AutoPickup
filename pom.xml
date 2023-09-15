@@ -6,7 +6,7 @@
 
     <groupId>us.thezircon.play</groupId>
     <artifactId>AutoPickup</artifactId>
-    <version>1.4.4-DEVBUILD.1</version>
+    <version>1.4.4-DEVBUILD.2</version>
     <packaging>jar</packaging>
 
     <name>AutoPickup</name>
