@@ -40,7 +40,7 @@ public class EntityDeathEventListener implements Listener {
                 if (!requirePermsAUTO) {
                     return;
                 }
-                if (!player.hasPermission("autopickup.pickup.entities") && !player.hasPermission("autopickup.pickup.entities.autoenable")) {
+                if (!player.hasPermission("autopickup.pickup.entities") && !player.hasPermission("autopickup.pickup.entities.autoenabled")) {
                     PLUGIN.autopickup_list_mobs.remove(player);
                 }
             }

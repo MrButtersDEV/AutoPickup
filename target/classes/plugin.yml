@@ -1,5 +1,5 @@
 name: AutoPickup
-version: 1.4.4-DEVBUILD.2
+version: 1.4.5-SNAPSHOT
 main: us.thezircon.play.autopickup.AutoPickup
 prefix: AutoPickup
 authors: [BUTTERFIELD8]
