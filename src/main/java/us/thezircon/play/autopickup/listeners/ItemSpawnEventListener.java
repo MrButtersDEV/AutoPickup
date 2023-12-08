@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.PickupObjective;
 
@@ -34,6 +35,11 @@ public class ItemSpawnEventListener implements Listener {
         UUID uuid = e.getEntity().getUniqueId();
         if (AutoPickup.droppedItems.contains(uuid)) {
             AutoPickup.droppedItems.remove(uuid);
+            return;
+        }
+
+        // IGNORE EVENT DRIVEN ITEMS
+        if (e.getEntity().hasMetadata("ap-ignore")) {
             return;
         }
 

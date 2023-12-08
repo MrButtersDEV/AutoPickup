@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.AutoSmelt;
+import us.thezircon.play.autopickup.utils.HexFormat;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +69,19 @@ public class BlockDropItemEventListener implements Listener {
 
             HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
             if (leftOver.keySet().size()>0) {
+
+                // Check if inv is full title
+                if (PLUGIN.getConfig().contains("titlebar")) {
+                    boolean doFullInvMSGTitleBar = PLUGIN.getConfig().getBoolean("titlebar.doTitleBar");
+                    String titleLine1 = HexFormat.format(PLUGIN.getConfig().getString("titlebar.line1"));
+                    String titleLine2 = HexFormat.format(PLUGIN.getConfig().getString("titlebar.line2"));
+                    if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
+                        //Player has no space
+                        if (doFullInvMSGTitleBar) {
+                            player.sendTitle(titleLine1, titleLine2, 1, 20, 1);
+                        }
+                    }
+                }
 
                 //Player has no space
                 if (doFullInvMSG) {
