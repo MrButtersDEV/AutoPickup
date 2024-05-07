@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.events.AutoPickUpEvent;
 import us.thezircon.play.autopickup.utils.AutoSmelt;
 import us.thezircon.play.autopickup.utils.HexFormat;
 
@@ -43,6 +44,14 @@ public class BlockDropItemEventListener implements Listener {
         if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
             return;
         }
+
+        // Call event and check for cancel
+        AutoPickUpEvent autoPickUpEvent = new AutoPickUpEvent(player);
+        autoPickUpEvent.call();
+
+        if (autoPickUpEvent.isCancelled())
+            return;
+
 
 //        if (block.getState() instanceof Container) {
 //            return; // Containers are handled in block break event
