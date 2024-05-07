@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.events.AutoPickUpEvent;
 
 import java.util.HashMap;
 
@@ -37,6 +38,13 @@ public class PlayerInteractEventListener implements Listener {
         if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
             return;
         }
+
+        // Call event and check for cancel
+        AutoPickUpEvent autoPickUpEvent = new AutoPickUpEvent(player);
+        autoPickUpEvent.call();
+
+        if (autoPickUpEvent.isCancelled())
+            return;
 
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if(e.getClickedBlock().getType() == Material.SWEET_BERRY_BUSH) {

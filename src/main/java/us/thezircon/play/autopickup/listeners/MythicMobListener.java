@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.events.AutoPickUpEvent;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,6 +52,13 @@ public class MythicMobListener implements Listener {
                 return;
             }
         }
+
+        // Call event and check for cancel
+        AutoPickUpEvent autoPickUpEvent = new AutoPickUpEvent(player);
+        autoPickUpEvent.call();
+
+        if (autoPickUpEvent.isCancelled())
+            return;
 
 
         // Drops

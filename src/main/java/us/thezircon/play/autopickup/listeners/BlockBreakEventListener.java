@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.events.AutoPickUpEvent;
 import us.thezircon.play.autopickup.utils.HexFormat;
 import us.thezircon.play.autopickup.utils.Mendable;
 import us.thezircon.play.autopickup.utils.PickupObjective;
@@ -144,6 +145,13 @@ public class BlockBreakEventListener implements Listener {
                 }
             }
         }.runTaskLater(PLUGIN, 1);
+
+        // Call event and check for cancel
+        AutoPickUpEvent autoPickUpEvent = new AutoPickUpEvent(player);
+        autoPickUpEvent.call();
+
+        if (autoPickUpEvent.isCancelled())
+            return;
 
         // Mend Items & Give Player XP
         int xp = e.getExpToDrop();
