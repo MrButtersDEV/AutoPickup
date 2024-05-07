@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.events.AutoPickUpEvent;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,6 +33,13 @@ public class EntityDropItemEventListener implements Listener {
         if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(e.getEntity().getWorld().getName())) {
             return;
         }
+
+        // Call event and check for cancel
+        AutoPickUpEvent autoPickUpEvent = new AutoPickUpEvent(null);
+        autoPickUpEvent.call();
+
+        if (autoPickUpEvent.isCancelled())
+            return;
 
         UUID sheep = e.getEntity().getUniqueId();
         if (player_sheep_map.containsKey(sheep)) {
