@@ -1,4 +1,4 @@
-ConfigVersion: 1.3
+ConfigVersion: 1.4
 #############################################################################################################
 #                          _             _____    _          _                                              #
 #          /\             | |           |  __ \  (_)        | |                                             #
@@ -48,6 +48,9 @@ titlebar:
 #This is most useful for prison servers! -- This setting is not normally recommended
 #This feature voids any extra blocks broken when /auto is enabled and the inventory is full!
 voidOnFullInv: false
+
+#If set to true AutoPickup will ignore XP drop calculations from when using a silk spawner plugin.
+usingSilkSpawnerPlugin: true
 
 #Plase does not have permission
 msgNoperms: "&cYou don't have permission to use this command"

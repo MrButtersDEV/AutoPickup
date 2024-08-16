@@ -146,20 +146,23 @@ public class BlockBreakEventListener implements Listener {
         }.runTaskLater(PLUGIN, 1);
 
         // Mend Items & Give Player XP
-        int xp = e.getExpToDrop();
-        player.giveExp(xp); // Give player XP
+        boolean usingSilkSpawner = PLUGIN.getConfig().getBoolean("usingSilkSpawnerPlugin");
+        if (!usingSilkSpawner || !(block.getType()==Material.SPAWNER)) {
+            int xp = e.getExpToDrop();
+            player.giveExp(xp); // Give player XP
 
-        // Mend
-        mend(player.getInventory().getItemInMainHand(), xp);
-        mend(player.getInventory().getItemInOffHand(), xp);
-        ItemStack armor[] = player.getInventory().getArmorContents();
-        for (ItemStack i : armor)
-        {
-            try {
-                mend(i, xp);
-            } catch (NullPointerException ignored) {}
+            // Mend
+            mend(player.getInventory().getItemInMainHand(), xp);
+            mend(player.getInventory().getItemInOffHand(), xp);
+            ItemStack armor[] = player.getInventory().getArmorContents();
+            for (ItemStack i : armor)
+            {
+                try {
+                    mend(i, xp);
+                } catch (NullPointerException ignored) {}
+            }
+            e.setExpToDrop(0); // Remove default XP
         }
-        e.setExpToDrop(0); // Remove default XP
 
         // Deal with Containers
         if (block.getState() instanceof Container) {
