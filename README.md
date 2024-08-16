@@ -57,6 +57,10 @@ GitHub and Spigot DMs (`@MrButtersDev`) are another good place for support. I ch
 > 
 > ```kotlin
 > %autopickup_autoenabled%
+> ```
+> ```kotlin
 > %autopickup_dropsenabled%
+> ```
+> ```kotlin
 > %autopickup_autosmeltenabled%
 > ```
