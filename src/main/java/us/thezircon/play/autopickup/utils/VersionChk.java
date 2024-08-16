@@ -20,10 +20,13 @@ public class VersionChk {
 
     private static final Logger log = Logger.getLogger("Minecraft");
 
+    public static String[] changelog;
+
     public static void checkVersion(String name, int id) throws Exception { //https://api.spigotmc.org/legacy/update.php?resource=76103"
 
         //https://api.github.com/repos/MrButtersDEV/AutoPickup/releases/latest
         String url = "https://api.spigotmc.org/legacy/update.php?resource="+id;
+        String url2 = "https://raw.githubusercontent.com/MrButtersDEV/AutoPickup/master/update-info.txt";
 
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -37,8 +40,7 @@ public class VersionChk {
         int responseCode = con.getResponseCode();
         PLUGIN.getServer().getConsoleSender().sendMessage(PLUGIN.getMsg().getPrefix() + ChatColor.RESET +" Checking for new verison...");
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
 
@@ -46,6 +48,28 @@ public class VersionChk {
             response.append(inputLine);
         }
         in.close();
+
+        URL obj2 = new URL(url2);
+        HttpURLConnection con2 = (HttpURLConnection) obj2.openConnection();
+
+        // optional default is GET
+        con2.setRequestMethod("GET");
+
+        //add request header
+        con2.setRequestProperty("User-Agent", USER_AGENT);
+
+        int responseCode2 = con2.getResponseCode();
+
+        BufferedReader in2 = new BufferedReader(new InputStreamReader(con2.getInputStream()));
+        String inputLine2;
+        StringBuffer response2 = new StringBuffer();
+
+        while ((inputLine2 = in2.readLine()) != null) {
+            response2.append(inputLine2);
+        }
+        in2.close();
+
+        changelog = response2.toString().split("- ");
 
         //print result
         String spigotVerison = response.toString();
@@ -56,6 +80,11 @@ public class VersionChk {
             PLUGIN.getServer().getConsoleSender().sendMessage(PLUGIN.getMsg().getPrefix() + ChatColor.RED + " UPDATE FOUND: " + ChatColor.GREEN + "https://www.spigotmc.org/resources/"+id+"/");
             PLUGIN.getServer().getConsoleSender().sendMessage(PLUGIN.getMsg().getPrefix() + ChatColor.GOLD + " Version: " + ChatColor.GREEN + response.toString() + ChatColor.AQUA + " Using Version: " + ChatColor.DARK_AQUA + ver);
             PLUGIN.UP2Date = false;
+            for (String s : changelog) {
+                if (s.isEmpty())
+                    continue;
+                PLUGIN.getServer().getConsoleSender().sendMessage(PLUGIN.getMsg().getPrefix() + ChatColor.YELLOW + "  - " + s);
+            }
         }
 
         // Config Version:

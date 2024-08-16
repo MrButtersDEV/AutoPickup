@@ -1,5 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
+import me.clip.placeholderapi.expansion.Version;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -12,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.PickupPlayer;
+import us.thezircon.play.autopickup.utils.VersionChk;
 
 public class PlayerJoinEventListener implements Listener{
 
@@ -31,6 +33,11 @@ public class PlayerJoinEventListener implements Listener{
             message.setClickEvent( new ClickEvent( ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/autopickup-1-16-support.70157/" ) );
             message.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click to open on spigot!" ).create() ) );
             player.spigot().sendMessage( message );
+            for (String s : VersionChk.changelog) {
+                if (s.isEmpty())
+                    continue;
+                player.sendMessage(PLUGIN.getMsg().getPrefix() + ChatColor.YELLOW + "  - " + s);
+            }
         }
 
         boolean doAutoEnableMSG = PLUGIN.getConfig().getBoolean("doAutoEnableMSG");
