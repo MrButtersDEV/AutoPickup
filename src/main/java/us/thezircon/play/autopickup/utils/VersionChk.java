@@ -89,11 +89,23 @@ public class VersionChk {
 
         // Config Version:
         double configVersion = PLUGIN.getConfig().getDouble("ConfigVersion");
+        if (configVersion<=1.2) {
+            PLUGIN.getConfig().set("ConfigVersion", 1.3);
+            PLUGIN.getBlacklistConf().set("doAutoSmeltBlacklist", false);
+            PLUGIN.getBlacklistConf().set("AutoSmeltBlacklist", Arrays.asList("OAK_LOG"));
+
+            File conf = new File(PLUGIN.getDataFolder(), "config.yml");
+            File fileBlacklist = new File(PLUGIN.getDataFolder(), "blacklist.yml");
+
+            PLUGIN.getConfig().save(conf);
+            PLUGIN.getBlacklistConf().save(fileBlacklist);
+        }
         if (configVersion<=1.3) {
             PLUGIN.getConfig().set("ConfigVersion", 1.4);
             PLUGIN.getBlacklistConf().set("doAutoSmeltBlacklist", false);
             PLUGIN.getBlacklistConf().set("AutoSmeltBlacklist", Arrays.asList("OAK_LOG"));
             PLUGIN.getConfig().set("usingSilkSpawnerPlugin", true);
+            PLUGIN.getConfig().set("ignoreMobXPDrops", false);
 
             File conf = new File(PLUGIN.getDataFolder(), "config.yml");
             File fileBlacklist = new File(PLUGIN.getDataFolder(), "blacklist.yml");

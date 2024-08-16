@@ -34,7 +34,7 @@ doAutoEnableMSG: true
 msgEnabledJoinMSG: "&7Auto pickup has been automatically&a enabled&7."
 doEnabledOnJoinMSG: true
 
-#reload Config Message
+#Reload Config Message
 msgReload: "&cReloaded Config"
 
 #Fully Inventory Message
@@ -51,6 +51,9 @@ voidOnFullInv: false
 
 #If set to true AutoPickup will ignore XP drop calculations from when using a silk spawner plugin.
 usingSilkSpawnerPlugin: true
+
+#If set to true mobs will naturally drop XP
+ignoreMobXPDrops: false
 
 #Plase does not have permission
 msgNoperms: "&cYou don't have permission to use this command"

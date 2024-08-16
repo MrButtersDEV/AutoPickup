@@ -62,24 +62,6 @@ public class EntityDeathEventListener implements Listener {
             }
         }
 
-
-
-        // Mend Items & Give Player XP
-        int xp = e.getDroppedExp();
-        player.giveExp(xp); // Give player XP
-
-        // Mend
-        mend(player.getInventory().getItemInMainHand(), xp);
-        mend(player.getInventory().getItemInOffHand(), xp);
-        ItemStack armor[] = player.getInventory().getArmorContents();
-        for (ItemStack i : armor)
-        {
-            try {
-                mend(i, xp);
-            } catch (NullPointerException ignored) {}
-        }
-        e.setDroppedExp(0); // Remove default XP
-
         // Drops
         Iterator<ItemStack> iter = e.getDrops().iterator();
         while (iter.hasNext()) {
@@ -119,5 +101,22 @@ public class EntityDeathEventListener implements Listener {
         }
         e.getDrops().clear();
 
+        // Mend Items & Give Player XP
+        if (!PLUGIN.getConfig().getBoolean("ignoreMobXPDrops")) {
+            int xp = e.getDroppedExp();
+            player.giveExp(xp); // Give player XP
+
+            // Mend
+            mend(player.getInventory().getItemInMainHand(), xp);
+            mend(player.getInventory().getItemInOffHand(), xp);
+            ItemStack armor[] = player.getInventory().getArmorContents();
+            for (ItemStack i : armor) {
+                try {
+                    mend(i, xp);
+                } catch (NullPointerException ignored) {
+                }
+            }
+            e.setDroppedExp(0); // Remove default XP
+        }
     }
 }
