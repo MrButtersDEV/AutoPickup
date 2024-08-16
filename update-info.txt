@@ -1,3 +1,4 @@
 - Updated BentoBox dependency
 - Updated MythicMobs dependency
 - Added new "usingSilkSpawnerPlugin: true" to config.yml
+- Added new changelog message to the version check
