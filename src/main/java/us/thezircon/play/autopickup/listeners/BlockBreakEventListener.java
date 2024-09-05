@@ -1,6 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
-import me.crafter.mc.lockettepro.LocketteProAPI;
+//import me.crafter.mc.lockettepro.LocketteProAPI;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -85,11 +85,11 @@ public class BlockBreakEventListener implements Listener {
         }
 
         // LockettePro Patch
-        if (AutoPickup.usingLocketteProByBrunyman) {
-            if (LocketteProAPI.isLocked(block)) {
-                return;
-            }
-        }
+//        if (AutoPickup.usingLocketteProByBrunyman) {
+//            if (LocketteProAPI.isLocked(block)) {
+//                return;
+//            }
+//        }
 
         // AOneBlock Patch
         new BukkitRunnable() {
