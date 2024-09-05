@@ -131,9 +131,9 @@ public final class AutoPickup extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityDropItemEventListener(), this);
 
 
-        if (usingMythicMobs) {
-            getServer().getPluginManager().registerEvents(new MythicMobListener(), this);
-        }
+//        if (usingMythicMobs) {
+//            getServer().getPluginManager().registerEvents(new MythicMobListener(), this);
+//        }
 
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
@@ -147,19 +147,19 @@ public final class AutoPickup extends JavaPlugin {
         Metrics metrics = new Metrics(this, 5914);
 
         // Version Check
-        String pluginName = this.getName();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    VersionChk.checkVersion(pluginName, 70157);
-                } catch (UnknownHostException e) {
-                    VersionChk.noConnection();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.run();
+//        String pluginName = this.getName();
+//        new BukkitRunnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    VersionChk.checkVersion(pluginName, 70157);
+//                } catch (UnknownHostException e) {
+//                    VersionChk.noConnection();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }.run();
 
         // Worlds blacklist
         if (getBlacklistConf().contains("BlacklistedWorlds")) {

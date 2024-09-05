@@ -86,12 +86,12 @@
             <version>1.20-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>world.bentobox</groupId>
-            <artifactId>bentobox</artifactId>
-            <version>2.5.0</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>world.bentobox</groupId>-->
+<!--            <artifactId>bentobox</artifactId>-->
+<!--            <version>2.5.0</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -104,11 +104,11 @@
             <version>2.10.9</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>io.lumine</groupId>
-            <artifactId>Mythic-Dist</artifactId>
-            <version>5.6.1</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.lumine</groupId>-->
+<!--            <artifactId>Mythic-Dist</artifactId>-->
+<!--            <version>5.6.1</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
     </dependencies>
 </project>

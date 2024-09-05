@@ -1,6 +1,6 @@
 package us.thezircon.play.autopickup.listeners;
 
-import me.crafter.mc.lockettepro.LocketteProAPI;
+//import me.crafter.mc.lockettepro.LocketteProAPI;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -23,8 +23,8 @@ import us.thezircon.play.autopickup.utils.HexFormat;
 import us.thezircon.play.autopickup.utils.Mendable;
 import us.thezircon.play.autopickup.utils.PickupObjective;
 import us.thezircon.play.autopickup.utils.TallCrops;
-import world.bentobox.bentobox.BentoBox;
-import world.bentobox.bentobox.database.objects.Island;
+//import world.bentobox.bentobox.BentoBox;
+//import world.bentobox.bentobox.database.objects.Island;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -85,65 +85,65 @@ public class BlockBreakEventListener implements Listener {
         }
 
         // LockettePro Patch
-        if (AutoPickup.usingLocketteProByBrunyman) {
-            if (LocketteProAPI.isLocked(block)) {
-                return;
-            }
-        }
+//        if (AutoPickup.usingLocketteProByBrunyman) {
+//            if (LocketteProAPI.isLocked(block)) {
+//                return;
+//            }
+//        }
 
         // AOneBlock Patch
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (AutoPickup.usingBentoBox) {
-                    BentoBox bb = BentoBox.getInstance();
-                    if (BentoBox.getInstance().getAddonsManager().getAddonByName("AOneBlock").isPresent()) {
-
-                        if (!bb.getIslands().getIslandAt(loc).isPresent()) { return; }
-
-                        Island island = bb.getIslands().getIslandAt(loc).get();
-                        if (island.getCenter().equals(block.getLocation())) {
-                            for (Entity ent : loc.getWorld().getNearbyEntities(block.getLocation().add(0, 1, 0), 1, 1, 1)) {
-                                if (ent instanceof Item) {
-
-                                    HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(((Item) ent).getItemStack());
-                                    ent.remove();
-                                    if (leftOver.keySet().size()>0) {
-                                        for (ItemStack item : leftOver.values()) {
-                                            player.getWorld().dropItemNaturally(loc, item);
-                                        }
-                                        if (doFullInvMSG) {
-                                            long secondsLeft;
-                                            long cooldown = 15000; // 15 sec
-                                            if (AutoPickup.lastInvFullNotification.containsKey(player.getUniqueId())) {
-                                                secondsLeft = (AutoPickup.lastInvFullNotification.get(player.getUniqueId())/1000)+ cooldown/1000 - (System.currentTimeMillis()/1000);
-                                            } else {
-                                                secondsLeft = 0;
-                                            }
-                                            if (secondsLeft<=0) {
-                                                player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
-                                                AutoPickup.lastInvFullNotification.put(player.getUniqueId(), System.currentTimeMillis());
-                                            }
-                                        }
-                                    }
-
-//                                    if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
-//                                        //Player has no space
-//                                        if (doFullInvMSG) {
-//                                            player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+//        new BukkitRunnable() {
+//            @Override
+//            public void run() {
+//                if (AutoPickup.usingBentoBox) {
+//                    BentoBox bb = BentoBox.getInstance();
+//                    if (BentoBox.getInstance().getAddonsManager().getAddonByName("AOneBlock").isPresent()) {
+//
+//                        if (!bb.getIslands().getIslandAt(loc).isPresent()) { return; }
+//
+//                        Island island = bb.getIslands().getIslandAt(loc).get();
+//                        if (island.getCenter().equals(block.getLocation())) {
+//                            for (Entity ent : loc.getWorld().getNearbyEntities(block.getLocation().add(0, 1, 0), 1, 1, 1)) {
+//                                if (ent instanceof Item) {
+//
+//                                    HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(((Item) ent).getItemStack());
+//                                    ent.remove();
+//                                    if (leftOver.keySet().size()>0) {
+//                                        for (ItemStack item : leftOver.values()) {
+//                                            player.getWorld().dropItemNaturally(loc, item);
 //                                        }
-//                                        return;
-//                                    } else {
-//                                        player.getInventory().addItem(((Item) ent).getItemStack());
-//                                        ent.remove();
+//                                        if (doFullInvMSG) {
+//                                            long secondsLeft;
+//                                            long cooldown = 15000; // 15 sec
+//                                            if (AutoPickup.lastInvFullNotification.containsKey(player.getUniqueId())) {
+//                                                secondsLeft = (AutoPickup.lastInvFullNotification.get(player.getUniqueId())/1000)+ cooldown/1000 - (System.currentTimeMillis()/1000);
+//                                            } else {
+//                                                secondsLeft = 0;
+//                                            }
+//                                            if (secondsLeft<=0) {
+//                                                player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+//                                                AutoPickup.lastInvFullNotification.put(player.getUniqueId(), System.currentTimeMillis());
+//                                            }
+//                                        }
 //                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }.runTaskLater(PLUGIN, 1);
+//
+////                                    if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
+////                                        //Player has no space
+////                                        if (doFullInvMSG) {
+////                                            player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+////                                        }
+////                                        return;
+////                                    } else {
+////                                        player.getInventory().addItem(((Item) ent).getItemStack());
+////                                        ent.remove();
+////                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }.runTaskLater(PLUGIN, 1);
 
         // Mend Items & Give Player XP
         boolean usingSilkSpawner = PLUGIN.getConfig().getBoolean("usingSilkSpawnerPlugin");
