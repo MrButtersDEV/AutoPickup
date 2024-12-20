@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
 
 import java.util.HashMap;
@@ -40,10 +39,9 @@ public class PlayerInteractEventListener implements Listener {
 
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if(e.getClickedBlock().getType() == Material.SWEET_BERRY_BUSH) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        for (Entity entity : loc.getWorld().getNearbyEntities(loc, 1, 1, 1)) {
+                AutoPickup.getFoliaLib().getScheduler().runAtLocationLater(loc, () -> {
+                    for (Entity entity : loc.getWorld().getNearbyEntities(loc, 1, 1, 1)) {
+                        AutoPickup.getFoliaLib().getScheduler().runAtEntity(entity, task -> {
                             if (entity.getType().equals(EntityType.DROPPED_ITEM)) {
                                 Item item = (Item) entity;
                                 ItemStack items = item.getItemStack();
@@ -64,9 +62,9 @@ public class PlayerInteractEventListener implements Listener {
                                 }
 
                             }
-                        }
+                        });
                     }
-                }.runTaskLater(PLUGIN, 1);
+                }, 1);
             }
         }
     }

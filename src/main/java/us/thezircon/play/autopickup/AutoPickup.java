@@ -1,12 +1,13 @@
 package us.thezircon.play.autopickup;
 
+import com.tcoded.folialib.FoliaLib;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.commands.AutoDrops;
 import us.thezircon.play.autopickup.commands.AutoPickup.Auto;
 import us.thezircon.play.autopickup.commands.AutoSmelt;
@@ -54,6 +55,8 @@ public final class AutoPickup extends JavaPlugin {
 
     private static AutoPickup instance;
 
+    private static FoliaLib foliaLib;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -64,6 +67,10 @@ public final class AutoPickup extends JavaPlugin {
         saveDefaultConfig();
         createBlacklist();
         createPlayerDataDir();
+
+        // Folialib
+        foliaLib = new FoliaLib(this);
+
 
         // PAPI Check
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
@@ -148,18 +155,15 @@ public final class AutoPickup extends JavaPlugin {
 
         // Version Check
         String pluginName = this.getName();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    VersionChk.checkVersion(pluginName, 70157);
-                } catch (UnknownHostException e) {
-                    VersionChk.noConnection();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        foliaLib.getScheduler().runNextTick(task -> {
+            try {
+                VersionChk.checkVersion(pluginName, 70157);
+            } catch (UnknownHostException e) {
+                VersionChk.noConnection();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }.run();
+        });
 
         // Worlds blacklist
         if (getBlacklistConf().contains("BlacklistedWorlds")) {
@@ -167,24 +171,17 @@ public final class AutoPickup extends JavaPlugin {
         }
 
         // Pickup Objective Cleaner
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                customItemPatch.keySet().removeIf(key -> (Duration.between(Instant.now(), customItemPatch.get(key).getCreatedAt()).getSeconds() < -15));
-            }
-        }.runTaskTimerAsynchronously(this, 300L, 300L); // 15 sec
+        foliaLib.getScheduler().runTimerAsync(() -> customItemPatch.keySet().removeIf(key -> (Duration.between(Instant.now(), customItemPatch.get(key).getCreatedAt()).getSeconds() < -15)), 300L, 300L); // 15 sec
 
         // Dropped items cleaner ****
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    droppedItems.removeIf(uuid -> (Bukkit.getEntity(uuid))==null);
-                    droppedItems.removeIf(uuid -> (Bukkit.getEntity(uuid)).isDead()); ///////
-                } catch (NullPointerException ignored) {}
-            }
-        }.runTaskTimer(this, 6000L, 6000L); // 5 min
-
+        foliaLib.getScheduler().runTimer(task -> {
+            try {
+                droppedItems.removeIf(uuid -> {
+                    Entity entity = Bukkit.getEntity(uuid);
+                    return entity == null || entity.isDead();
+                });
+            } catch (NullPointerException ignored) {}
+        }, 6000L, 6000L); // 5 minutes
     }
 
 
@@ -265,5 +262,9 @@ public final class AutoPickup extends JavaPlugin {
 
     public static AutoPickup getInstance() {
         return instance;
+    }
+
+    public static FoliaLib getFoliaLib() {
+        return foliaLib;
     }
 }

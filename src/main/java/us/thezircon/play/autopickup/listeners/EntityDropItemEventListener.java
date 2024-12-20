@@ -63,12 +63,9 @@ public class EntityDropItemEventListener implements Listener {
                 }
             }
 
-            Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
-                @Override
-                public void run() {
-                    if (!player.hasPermission("autopickup.pickup.mined")) {
-                        PLUGIN.autopickup_list.remove(player);
-                    }
+            AutoPickup.getFoliaLib().getScheduler().runAsync(task -> {
+                if (!player.hasPermission("autopickup.pickup.mined")) {
+                    PLUGIN.autopickup_list.remove(player);
                 }
             });
         }
