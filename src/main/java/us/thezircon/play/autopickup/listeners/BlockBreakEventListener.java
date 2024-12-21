@@ -17,7 +17,6 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.HexFormat;
 import us.thezircon.play.autopickup.utils.Mendable;
@@ -44,19 +43,16 @@ public class BlockBreakEventListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
-            @Override
-            public void run() {
-                boolean requirePermsAUTO = PLUGIN.getConfig().getBoolean("requirePerms.autopickup");
-                if (!requirePermsAUTO) {
-                    return;
-                }
-                if (!player.hasPermission("autopickup.pickup.mined") && !player.hasPermission("autopickup.pickup.mined.autoenabled")) {
-                    PLUGIN.autopickup_list.remove(player);
-                }
-                if (!player.hasPermission("autopickup.pickup.mined.autosmelt") && !player.hasPermission("autopickup.pickup.mined.autosmelt.autoenabled")) {
-                    PLUGIN.auto_smelt_blocks.remove(player);
-                }
+        AutoPickup.getFoliaLib().getScheduler().runAsync(task -> {
+            boolean requirePermsAUTO = PLUGIN.getConfig().getBoolean("requirePerms.autopickup");
+            if (!requirePermsAUTO) {
+                return;
+            }
+            if (!player.hasPermission("autopickup.pickup.mined") && !player.hasPermission("autopickup.pickup.mined.autoenabled")) {
+                PLUGIN.autopickup_list.remove(player);
+            }
+            if (!player.hasPermission("autopickup.pickup.mined.autosmelt") && !player.hasPermission("autopickup.pickup.mined.autosmelt.autoenabled")) {
+                PLUGIN.auto_smelt_blocks.remove(player);
             }
         });
 
@@ -92,18 +88,17 @@ public class BlockBreakEventListener implements Listener {
 //        }
 
         // AOneBlock Patch
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (AutoPickup.usingBentoBox) {
-                    BentoBox bb = BentoBox.getInstance();
-                    if (BentoBox.getInstance().getAddonsManager().getAddonByName("AOneBlock").isPresent()) {
+        AutoPickup.getFoliaLib().getScheduler().runAtLocationLater(loc, () -> {
+            if (AutoPickup.usingBentoBox) {
+                BentoBox bb = BentoBox.getInstance();
+                if (BentoBox.getInstance().getAddonsManager().getAddonByName("AOneBlock").isPresent()) {
 
-                        if (!bb.getIslands().getIslandAt(loc).isPresent()) { return; }
+                    if (!bb.getIslands().getIslandAt(loc).isPresent()) { return; }
 
-                        Island island = bb.getIslands().getIslandAt(loc).get();
-                        if (island.getCenter().equals(block.getLocation())) {
-                            for (Entity ent : loc.getWorld().getNearbyEntities(block.getLocation().add(0, 1, 0), 1, 1, 1)) {
+                    Island island = bb.getIslands().getIslandAt(loc).get();
+                    if (island.getCenter().equals(block.getLocation())) {
+                        for (Entity ent : loc.getWorld().getNearbyEntities(block.getLocation().add(0, 1, 0), 1, 1, 1)) {
+                            AutoPickup.getFoliaLib().getScheduler().runAtEntity(ent, task -> {
                                 if (ent instanceof Item) {
 
                                     HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(((Item) ent).getItemStack());
@@ -138,12 +133,12 @@ public class BlockBreakEventListener implements Listener {
 //                                        ent.remove();
 //                                    }
                                 }
-                            }
+                            });
                         }
                     }
                 }
             }
-        }.runTaskLater(PLUGIN, 1);
+        }, 1);
 
         // Mend Items & Give Player XP
         boolean usingSilkSpawner = PLUGIN.getConfig().getBoolean("usingSilkSpawnerPlugin");
@@ -374,15 +369,12 @@ public class BlockBreakEventListener implements Listener {
     }
 
     private static void fix(ItemStack item) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                ItemMeta meta = item.getItemMeta();
-                Damageable damage = (Damageable) meta;
-                damage.setDamage(0);
-                item.setItemMeta(meta);
-            }
-        }.runTaskLater(PLUGIN, 1);
+        AutoPickup.getFoliaLib().getScheduler().runLater(() -> {
+            ItemMeta meta = item.getItemMeta();
+            Damageable damage = (Damageable) meta;
+            damage.setDamage(0);
+            item.setItemMeta(meta);
+        }, 1);
     }
 
     private static int amt = 1;

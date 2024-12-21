@@ -3,7 +3,6 @@ package us.thezircon.play.autopickup.utils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
 
 import java.io.File;
@@ -51,63 +50,54 @@ public class PickupPlayer {
     }
 
     public void setEnabled(boolean e) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (!fileExists()) {createFile();}
+        AutoPickup.getFoliaLib().getScheduler().runLater(() -> {
+            if (!fileExists()) {createFile();}
 
-                File playerFile = new File(plugin.getDataFolder()+File.separator+"PlayerData"+File.separator+uuid+".yml");
-                FileConfiguration data = YamlConfiguration.loadConfiguration(playerFile);
+            File playerFile = new File(plugin.getDataFolder()+File.separator+"PlayerData"+File.separator+uuid+".yml");
+            FileConfiguration data = YamlConfiguration.loadConfiguration(playerFile);
 
-                data.set("enabled", e);
+            data.set("enabled", e);
 
-                try {
-                    data.save(playerFile);
-                } catch (IOException err){
-                    log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
-                }
+            try {
+                data.save(playerFile);
+            } catch (IOException err){
+                log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
             }
-        }.runTaskLater(plugin, 1);
+        }, 1);
     }
 
     public void setEnabledEntities(boolean e) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (!fileExists()) {createFile();}
+        AutoPickup.getFoliaLib().getScheduler().runLater(() -> {
+            if (!fileExists()) {createFile();}
 
-                File playerFile = new File(plugin.getDataFolder()+File.separator+"PlayerData"+File.separator+uuid+".yml");
-                FileConfiguration data = YamlConfiguration.loadConfiguration(playerFile);
+            File playerFile = new File(plugin.getDataFolder()+File.separator+"PlayerData"+File.separator+uuid+".yml");
+            FileConfiguration data = YamlConfiguration.loadConfiguration(playerFile);
 
-                data.set("enabled_mob_drops", e);
+            data.set("enabled_mob_drops", e);
 
-                try {
-                    data.save(playerFile);
-                } catch (IOException err){
-                    log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
-                }
+            try {
+                data.save(playerFile);
+            } catch (IOException err){
+                log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
             }
-        }.runTaskLater(plugin, 1);
+        }, 1);
     }
 
     public void setEnabledAutoSmelt(boolean e) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (!fileExists()) {createFile();}
+        AutoPickup.getFoliaLib().getScheduler().runLater(() -> {
+            if (!fileExists()) {createFile();}
 
-                File playerFile = new File(plugin.getDataFolder()+File.separator+"PlayerData"+File.separator+uuid+".yml");
-                FileConfiguration data = YamlConfiguration.loadConfiguration(playerFile);
+            File playerFile = new File(plugin.getDataFolder()+File.separator+"PlayerData"+File.separator+uuid+".yml");
+            FileConfiguration data = YamlConfiguration.loadConfiguration(playerFile);
 
-                data.set("enabled_auto_smelt", e);
+            data.set("enabled_auto_smelt", e);
 
-                try {
-                    data.save(playerFile);
-                } catch (IOException err){
-                    log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
-                }
+            try {
+                data.save(playerFile);
+            } catch (IOException err){
+                log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
             }
-        }.runTaskLater(plugin, 1);
+        }, 1);
     }
 
     public boolean getToggle(){
