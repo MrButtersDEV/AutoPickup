@@ -30,7 +30,6 @@ public class Auto implements TabExecutor{
     public ArrayList<CMDManager> getSubCommands(){
         return subcommands;
     }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         boolean requirePermsAUTO = PLUGIN.getConfig().getBoolean("requirePerms.autopickup");

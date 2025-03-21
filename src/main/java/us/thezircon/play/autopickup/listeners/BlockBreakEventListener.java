@@ -324,7 +324,7 @@ public class BlockBreakEventListener implements Listener {
         }
 
         //deal with sugarcane
-        if (e.getBlock().getType() == Material.SUGAR_CANE || e.getBlock().getType() == Material.GRASS || e.getBlock().getType() == Material.SAND) {
+        if (e.getBlock().getType() == Material.SUGAR_CANE || e.getBlock().getType() == Material.GRASS_BLOCK || e.getBlock().getType() == Material.SAND) {
             Location lnew = l.clone();
             do {
                 lnew.setY(lnew.getY() + 1);

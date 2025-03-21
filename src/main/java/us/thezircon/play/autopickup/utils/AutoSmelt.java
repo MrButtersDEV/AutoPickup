@@ -6,6 +6,7 @@ import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.api.AutoAPI;
 
 import java.util.*;
 

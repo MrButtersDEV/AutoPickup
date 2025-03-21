@@ -44,7 +44,7 @@ public class PlayerInteractEventListener implements Listener {
                     @Override
                     public void run() {
                         for (Entity entity : loc.getWorld().getNearbyEntities(loc, 1, 1, 1)) {
-                            if (entity.getType().equals(EntityType.DROPPED_ITEM)) {
+                            if (entity.getType().equals(EntityType.ITEM)) {
                                 Item item = (Item) entity;
                                 ItemStack items = item.getItemStack();
                                 if (items.getType().equals(Material.SWEET_BERRIES)) {
