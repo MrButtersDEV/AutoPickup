@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class TallCrops {
 
@@ -11,6 +12,8 @@ public class TallCrops {
     public ArrayList<Material> verticalReqDown = new ArrayList<>();
 
     public TallCrops () {
+        //verticalReqDown.add(Material.CAVE_VINES_PLANT);
+        //verticalReqDown.add(Material.CAVE_VINES);
         //verticalReq.add(Material.SUGAR_CANE);
         //verticalReq.add(Material.CACTUS);
         //verticalReq.add(Material.KELP);
@@ -23,14 +26,12 @@ public class TallCrops {
                 Bukkit.getVersion().contains("1.20") ||
                 Bukkit.getVersion().contains("1.21")
         ) {
-            verticalReqDown.add(Material.WEEPING_VINES);
             verticalReqDown.add(Material.WEEPING_VINES_PLANT);
+            verticalReqDown.add(Material.WEEPING_VINES);
             verticalReq.add(Material.TWISTING_VINES_PLANT);
             verticalReq.add(Material.TWISTING_VINES);
             verticalReq.add(Material.BAMBOO);
             verticalReq.add(Material.BAMBOO_SAPLING);
-            verticalReq.add(Material.BIG_DRIPLEAF_STEM);
-            verticalReq.add(Material.BIG_DRIPLEAF);
         } else if (Bukkit.getVersion().contains("1.16")) {
             verticalReqDown.add(Material.WEEPING_VINES);
             verticalReqDown.add(Material.WEEPING_VINES_PLANT);
@@ -56,11 +57,6 @@ public class TallCrops {
     }
 
     public static Material checkAltType(Material material) {
-        if (Bukkit.getVersion().contains("1.17")) {
-            if (material.equals(Material.BIG_DRIPLEAF_STEM)) {
-                return Material.BIG_DRIPLEAF;
-            }
-        }
         return material;
     }
 }

@@ -349,6 +349,51 @@ public class BlockBreakEventListener implements Listener {
                 }
             } while (true);
             addLocation(lnew, e.getPlayer());
+        }else if (e.getBlock().getType() == Material.CAVE_VINES || e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.CAVE_VINES) {
+            Location lnew = l.clone();
+            do {
+                lnew.setY(lnew.getY() - 1);
+                if (lnew.getBlock().getType() == Material.CAVE_VINES) {
+                    addLocation(lnew, e.getPlayer());
+                } else {
+                    break;
+                }
+            } while (true);
+            addLocation(lnew, e.getPlayer());
+        }
+
+        //deal with dripleafs
+        if (e.getBlock().getType() == Material.BIG_DRIPLEAF_STEM || e.getBlock().getRelative(BlockFace.UP).getType() == Material.BIG_DRIPLEAF_STEM ) {
+            Location lnew = l.clone();
+            double y = lnew.getY();
+            do {
+                lnew.setY(lnew.getY() + 1);
+                if (lnew.getBlock().getType() == Material.BIG_DRIPLEAF_STEM) {
+                    addLocation(lnew, e.getPlayer());
+                }else if (lnew.getBlock().getType() == Material.BIG_DRIPLEAF) {
+                    addLocation(lnew, e.getPlayer());
+                }else {
+                    y--;
+                    lnew.setY(y);
+                    if (lnew.getBlock().getType() == Material.BIG_DRIPLEAF_STEM) {
+                        addLocation(lnew, e.getPlayer());
+                    }else {
+                        break;
+                    }
+                }
+            } while (true);
+            addLocation(lnew, e.getPlayer());
+        }else if (e.getBlock().getType() == Material.BIG_DRIPLEAF || e.getBlock().getRelative(BlockFace.UP).getType() == Material.BIG_DRIPLEAF) {
+            Location lnew = l.clone();
+            do {
+                lnew.setY(lnew.getY() - 1);
+                if (lnew.getBlock().getType() == Material.BIG_DRIPLEAF) {
+                    addLocation(lnew, e.getPlayer());
+                } else {
+                    break;
+                }
+            } while (true);
+            addLocation(lnew, e.getPlayer());
         }
 
         // TEST END
