@@ -337,6 +337,20 @@ public class BlockBreakEventListener implements Listener {
             addLocation(lnew, e.getPlayer());
         }
 
+        //deal with glow berries
+        if (e.getBlock().getType() == Material.CAVE_VINES_PLANT || e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.CAVE_VINES_PLANT) {
+            Location lnew = l.clone();
+            do {
+                lnew.setY(lnew.getY() - 1);
+                if (lnew.getBlock().getType() == Material.CAVE_VINES_PLANT) {
+                    addLocation(lnew, e.getPlayer());
+                } else {
+                    break;
+                }
+            } while (true);
+            addLocation(lnew, e.getPlayer());
+        }
+
         // TEST END
 
         if (verticalReq.contains(e.getBlock().getType()) || verticalReqDown.contains(e.getBlock().getType())) {
