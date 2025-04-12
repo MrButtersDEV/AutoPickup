@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.commands.AutoDrops;
+import us.thezircon.play.autopickup.commands.AutoFishingDrops;
 import us.thezircon.play.autopickup.commands.AutoPickup.Auto;
 import us.thezircon.play.autopickup.commands.AutoSmelt;
 import us.thezircon.play.autopickup.listeners.*;
@@ -25,6 +26,7 @@ public final class AutoPickup extends JavaPlugin {
 
     public HashSet<Player> autopickup_list = new HashSet<>(); // Blocks
     public HashSet<Player> autopickup_list_mobs = new HashSet<>(); // Mobs
+    public HashSet<Player> autopickup_list_fishing = new HashSet<>(); // Fish
     public HashSet<Player> auto_smelt_blocks = new HashSet<>(); // AutoSmelt - Blocks
     public Messages messages = null;
     public boolean UP2Date = true;
@@ -127,6 +129,7 @@ public final class AutoPickup extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityDeathEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDropItemEventListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerFishEventListener(), this);
         getServer().getPluginManager().registerEvents(new ItemSpawnEventListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDropItemEventListener(), this);
 
@@ -138,6 +141,7 @@ public final class AutoPickup extends JavaPlugin {
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
         getCommand("autodrops").setExecutor(new AutoDrops());
+        getCommand("autofishingdrops").setExecutor(new AutoFishingDrops());
         getCommand("autosmelt").setExecutor(new AutoSmelt());
 
         // Crops by version

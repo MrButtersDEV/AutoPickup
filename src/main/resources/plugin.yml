@@ -14,6 +14,9 @@ commands:
   autodrops:
     description: Toggles the ability to automaticly pickup drops from killed entities.
     aliases: [drops, autod]
+  autofishingdrops:
+    description: Toggles the ability to automaticly pickup drops from fishing.
+    aliases: [fishingdrops, autofd]
   autosmelt:
     description: Toggles the ability to automaticly smelt mined blocks.
     aliases: [asmelt]
@@ -21,6 +24,8 @@ permissions:
   autopickup.pickup.mined.autoenabled:
     default: false
   autopickup.pickup.entities.autoenabled:
+    default: false
+  autopickup.pickup.fishing.autoenabled:
     default: false
   autopickup.pickup.mined.autosmelt.autoenabled:
     default: false

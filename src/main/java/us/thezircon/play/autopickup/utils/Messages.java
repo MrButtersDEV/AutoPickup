@@ -23,6 +23,14 @@ public class Messages {
         return msgAutoDropsDisable;
     }
 
+    public String getMsgAutoFishingdropsEnable() {
+        return msgAutoFishingDropsEnable;
+    }
+
+    public String getMsgAutoFishingdropsDisable() {
+        return msgAutoFishingDropsDisable;
+    }
+
     public String getMsgAutoSmeltEnable() {
         return msgAutoSmeltEnable;
     }
@@ -33,6 +41,8 @@ public class Messages {
 
     private String msgAutoDropsEnable;
     private String msgAutoDropsDisable;
+    private String msgAutoFishingDropsEnable;
+    private String msgAutoFishingDropsDisable;
     private String msgAutoSmeltEnable;
     private String msgAutoSmeltDisable;
 
@@ -81,6 +91,8 @@ public class Messages {
         try {
             this.msgAutoDropsEnable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoMobDropsEnable"));
             this.msgAutoDropsDisable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoMobDropsDisable"));
+            this.msgAutoFishingDropsEnable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoFishingDropsEnable"));
+            this.msgAutoFishingDropsDisable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoFishingDropsDisable"));
             this.msgAutoSmeltEnable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoSmeltEnable"));
             this.msgAutoSmeltDisable = HexFormat.format(PLUGIN.getConfig().getString("msgAutoSmeltDisable"));
         } catch (NullPointerException e) {
