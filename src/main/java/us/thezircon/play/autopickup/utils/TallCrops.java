@@ -57,6 +57,18 @@ public class TallCrops {
     }
 
     public static Material checkAltType(Material material) {
+        if (
+                Bukkit.getVersion().contains("1.16") ||
+                        Bukkit.getVersion().contains("1.17") ||
+                        Bukkit.getVersion().contains("1.18") ||
+                        Bukkit.getVersion().contains("1.19") ||
+                        Bukkit.getVersion().contains("1.20") ||
+                        Bukkit.getVersion().contains("1.21")
+        ) {
+            if (material == Material.BAMBOO_SAPLING) {
+                return Material.BAMBOO;
+            }
+        }
         return material;
     }
 }
