@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.utils.PickupPlayer;
 import us.thezircon.play.autopickup.utils.VersionChk;
@@ -82,6 +83,18 @@ public class PlayerJoinEventListener implements Listener{
                 PLUGIN.autopickup_list_mobs.add(player);
             }
         }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+
+        Player player = e.getPlayer();
+
+        PLUGIN.autopickup_list.remove(player);
+        PLUGIN.auto_smelt_blocks.remove(player);
+        PLUGIN.autopickup_list_mobs.remove(player);
+        AutoPickup.lastInvFullNotification.remove(player.getUniqueId());
+
     }
 
 }
