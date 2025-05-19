@@ -7,6 +7,7 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import us.thezircon.play.autopickup.AutoPickup;
 import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.drops;
+import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.fishingdrops;
 import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.reload;
 import us.thezircon.play.autopickup.commands.AutoPickup.subcommands.smelt;
 import us.thezircon.play.autopickup.commands.CMDManager;
@@ -24,6 +25,7 @@ public class Auto implements TabExecutor{
     public Auto(){
         subcommands.add(new reload());
         subcommands.add(new drops());
+        subcommands.add(new fishingdrops());
         subcommands.add(new smelt());
     }
 

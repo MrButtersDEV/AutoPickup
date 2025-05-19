@@ -28,6 +28,10 @@ msgAutoSmeltDisable: "&7You have&c disabled &7auto smelt."
 msgAutoMobDropsEnable: "&7You have&a enabled &7auto drops."
 msgAutoMobDropsDisable: "&7You have&c disabled &7auto drops."
 
+#Toggle Message - /fishingdrops
+msgAutoFishingDropsEnable: "&7You have&a enabled &7auto fishing drops."
+msgAutoFishingDropsDisable: "&7You have&c disabled &7auto fishing drops."
+
 #Aditional toggling messages
 msgAutoEnable: "&7Auto pickup has been automatically&a enabled&7."
 doAutoEnableMSG: true
