@@ -34,44 +34,48 @@ public class EntityDropItemEventListener implements Listener {
         }
 
         UUID sheep = e.getEntity().getUniqueId();
-        if (player_sheep_map.containsKey(sheep)) {
-            Player player = Bukkit.getPlayer(player_sheep_map.get(sheep));
-            if (!PLUGIN.autopickup_list.contains(player)) {
-                return;
-            }
+        UUID playerUUID = player_sheep_map.remove(sheep); // Avoid duplicate lookups
+        if (playerUUID == null) return;
 
-            // Drops
-            ItemStack drops = e.getItemDrop().getItemStack();
-            e.getItemDrop().remove();
-            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drops);
-            if (leftOver.keySet().size()>0) {
-                for (ItemStack item : leftOver.values()) {
-                    player.getWorld().dropItemNaturally(e.getItemDrop().getLocation(), item);
-                }
-                if (doFullInvMSG) {
-                    long secondsLeft;
-                    long cooldown = 15000; // 15 sec
-                    if (AutoPickup.lastInvFullNotification.containsKey(player.getUniqueId())) {
-                        secondsLeft = (AutoPickup.lastInvFullNotification.get(player.getUniqueId())/1000)+ cooldown/1000 - (System.currentTimeMillis()/1000);
-                    } else {
-                        secondsLeft = 0;
-                    }
-                    if (secondsLeft<=0) {
-                        player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
-                        AutoPickup.lastInvFullNotification.put(player.getUniqueId(), System.currentTimeMillis());
-                    }
-                }
-            }
+        Player player = Bukkit.getPlayer(playerUUID);
+        if (player == null) return;
 
-            Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
-                @Override
-                public void run() {
-                    if (!player.hasPermission("autopickup.pickup.mined")) {
-                        PLUGIN.autopickup_list.remove(player);
-                    }
-                }
-            });
+        if (!PLUGIN.autopickup_list.contains(player)) {
+            return;
         }
-    }
 
+        // Drops
+        ItemStack drops = e.getItemDrop().getItemStack();
+        e.getItemDrop().remove();
+        HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drops);
+        if (leftOver.keySet().size()>0) {
+            for (ItemStack item : leftOver.values()) {
+                player.getWorld().dropItemNaturally(e.getItemDrop().getLocation(), item);
+            }
+            if (doFullInvMSG) {
+                long secondsLeft;
+                long cooldown = 15000; // 15 sec
+                if (AutoPickup.lastInvFullNotification.containsKey(player.getUniqueId())) {
+                    secondsLeft = (AutoPickup.lastInvFullNotification.get(player.getUniqueId())/1000)+ cooldown/1000 - (System.currentTimeMillis()/1000);
+                } else {
+                    secondsLeft = 0;
+                }
+                if (secondsLeft<=0) {
+                    player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
+                    AutoPickup.lastInvFullNotification.put(player.getUniqueId(), System.currentTimeMillis());
+                }
+            }
+        }
+
+        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
+            @Override
+            public void run() {
+                if (!player.hasPermission("autopickup.pickup.mined")) {
+                    PLUGIN.autopickup_list.remove(player);
+                }
+            }
+        });
+    }
 }
+
+
