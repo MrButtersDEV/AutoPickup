@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.utils.SchedulerUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -67,7 +68,7 @@ public class EntityDropItemEventListener implements Listener {
             }
         }
 
-        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
+        SchedulerUtils.runTaskAsynchronously(new Runnable() {
             @Override
             public void run() {
                 if (!player.hasPermission("autopickup.pickup.mined")) {
