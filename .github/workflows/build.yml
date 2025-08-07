@@ -1,70 +1,63 @@
-name: Build & Release
+name: Dev Build
 
 on:
   push:
     branches:
-      - master
       - dev
-    tags:
-      - '1.*'  # Matches tags like 1.4.7 or 1.4.7-SNAPSHOT
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: 📦 Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up Java
+      - name: ☕ Set up Java 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: temurin
+          java-version: 17
 
-      - name: Determine build version
-        id: versioning
+      - name: 🏷 Get current base version from pom.xml
+        id: version
         run: |
-          REF=${GITHUB_REF#refs/*/}
-          SHORT_SHA=$(git rev-parse --short HEAD)
+          BASE_VERSION=$(mvn help:evaluate -Dexpression=revision -q -DforceStdout)
+          echo "BASE_VERSION=${BASE_VERSION%%-DEVBUILD*}" >> $GITHUB_ENV
+          echo "::set-output name=base_version::${BASE_VERSION%%-DEVBUILD*}"
 
-          if [[ "$GITHUB_REF" == refs/tags/*-SNAPSHOT ]]; then
-            VERSION="$REF"
-            RELEASE_TYPE="prerelease"
-          elif [[ "$GITHUB_REF" == refs/heads/master ]]; then
-            VERSION="$REF"
-            RELEASE_TYPE="release"
-          elif [[ "$GITHUB_REF" == refs/heads/dev ]]; then
-            VERSION="1.4.7-DEVBUILD.${GITHUB_RUN_NUMBER}"
-            RELEASE_TYPE="none"
+      - name: 🔢 Get last dev build number
+        id: get-devbuild
+        run: |
+          VERSION_FILE=".github/devbuild-count.txt"
+          VERSION="${{ steps.version.outputs.base_version }}"
+          mkdir -p .github
+          touch "$VERSION_FILE"
+
+          CURRENT=$(grep "^$VERSION=" "$VERSION_FILE" | cut -d= -f2)
+          if [ -z "$CURRENT" ]; then
+            CURRENT=1
           else
-            VERSION="manual-${SHORT_SHA}"
-            RELEASE_TYPE="none"
+            CURRENT=$((CURRENT + 1))
           fi
 
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "RELEASE_TYPE=$RELEASE_TYPE" >> $GITHUB_ENV
+          echo "$VERSION=$CURRENT" > "$VERSION_FILE"
+          echo "DEVBUILD=$CURRENT" >> $GITHUB_ENV
+          echo "::set-output name=build_num::$CURRENT"
 
-      - name: Build with Maven
-        run: mvn clean package -Drevision=${{ env.VERSION }}
+      - name: 🛠 Build with Maven
+        run: |
+          VERSION="${{ env.BASE_VERSION }}-DEVBUILD.${{ steps.get-devbuild.outputs.build_num }}"
+          echo "Building version: $VERSION"
+          mvn clean package -Drevision=$VERSION
 
-      - name: Rename output JAR
+      - name: 🧹 Rename output JAR
         run: |
           mkdir dist
-          cp target/*.jar dist/AutoPickup-${{ env.VERSION }}.jar
+          cp target/*.jar dist/AutoPickup-${{ env.BASE_VERSION }}-DEVBUILD.${{ steps.get-devbuild.outputs.build_num }}.jar
 
-      - name: Upload Dev Build Artifact
-        if: env.RELEASE_TYPE == 'none'
+      - name: 📥 Upload Dev Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AutoPickup-${{ env.VERSION }}
+          name: AutoPickup-${{ env.BASE_VERSION }}-DEVBUILD.${{ steps.get-devbuild.outputs.build_num }}
           path: dist/*.jar
-
-      - name: Publish GitHub Release
-        if: env.RELEASE_TYPE != 'none'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.VERSION }}
-          name: AutoPickup ${{ env.VERSION }}
-          files: dist/AutoPickup-${{ env.VERSION }}.jar
-          prerelease: ${{ env.RELEASE_TYPE == 'prerelease' }}
