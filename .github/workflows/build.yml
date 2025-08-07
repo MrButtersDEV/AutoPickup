@@ -24,7 +24,7 @@ jobs:
         run: |
           BASE_VERSION=$(mvn help:evaluate -Dexpression=revision -q -DforceStdout)
           echo "BASE_VERSION=${BASE_VERSION%%-DEVBUILD*}" >> $GITHUB_ENV
-          echo "::set-output name=base_version::${BASE_VERSION%%-DEVBUILD*}"
+          echo "base_version=${BASE_VERSION%%-DEVBUILD*}" >> $GITHUB_OUTPUT
 
       - name: 🔢 Get last dev build number
         id: get-devbuild
@@ -43,7 +43,7 @@ jobs:
 
           echo "$VERSION=$CURRENT" > "$VERSION_FILE"
           echo "DEVBUILD=$CURRENT" >> $GITHUB_ENV
-          echo "::set-output name=build_num::$CURRENT"
+          echo "build_num=$CURRENT" >> $GITHUB_OUTPUT
 
       - name: 🛠 Build with Maven
         run: |
@@ -51,10 +51,11 @@ jobs:
           echo "Building version: $VERSION"
           mvn clean package -Drevision=$VERSION
 
-      - name: 🧹 Rename output JAR
+      - name: 🧹 Rename shaded output JAR
         run: |
           mkdir dist
-          cp target/*.jar dist/AutoPickup-${{ env.BASE_VERSION }}-DEVBUILD.${{ steps.get-devbuild.outputs.build_num }}.jar
+          SHADED=$(find target -name "*-shaded.jar" | head -n1)
+          cp "$SHADED" "dist/AutoPickup-${{ env.BASE_VERSION }}-DEVBUILD.${{ steps.get-devbuild.outputs.build_num }}.jar"
 
       - name: 📥 Upload Dev Build Artifact
         uses: actions/upload-artifact@v4
