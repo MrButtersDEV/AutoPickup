@@ -1,5 +1,1 @@
-- Updated BentoBox dependency
-- Updated MythicMobs dependency
-- Added new "usingSilkSpawnerPlugin: true" to config.yml
-- Added new "ignoreMobXPDrops: false" to config.yml
-- Added new changelog message to the version check
+- Temporarily removed lockettpro support

@@ -1,10 +1,13 @@
 package us.thezircon.play.autopickup;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.commands.AutoDrops;
@@ -49,8 +52,11 @@ public final class AutoPickup extends JavaPlugin {
     public static HashMap<String, PickupObjective> customItemPatch = new HashMap<>();
     public static HashSet<UUID> droppedItems = new HashSet<>();
 
+    // Cache smeling recipie list
+    public static final Map<Material, FurnaceRecipe> smeltRecipeCache = new HashMap<>();
+
     // Notification Cooldown
-    public static HashMap<UUID, Long> lastInvFullNotification = new HashMap<>();
+    public static WeakHashMap<UUID, Long> lastInvFullNotification = new WeakHashMap<>();
 
     private static AutoPickup instance;
 
@@ -179,11 +185,16 @@ public final class AutoPickup extends JavaPlugin {
             @Override
             public void run() {
                 try {
-                    droppedItems.removeIf(uuid -> (Bukkit.getEntity(uuid))==null);
-                    droppedItems.removeIf(uuid -> (Bukkit.getEntity(uuid)).isDead()); ///////
+                    droppedItems.removeIf(uuid -> {
+                        Entity entity = Bukkit.getEntity(uuid);
+                        return entity == null || entity.isDead();
+                    });
                 } catch (NullPointerException ignored) {}
             }
         }.runTaskTimer(this, 6000L, 6000L); // 5 min
+
+        // Load auto smelt cache
+        AutoSmeltUtils.loadFurnaceRecipes(smeltRecipeCache);
 
     }
 

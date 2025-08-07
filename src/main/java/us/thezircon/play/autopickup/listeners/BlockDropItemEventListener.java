@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
-import us.thezircon.play.autopickup.utils.AutoSmelt;
+import us.thezircon.play.autopickup.utils.AutoSmeltUtils;
 import us.thezircon.play.autopickup.utils.HexFormat;
 
 import java.util.HashMap;
@@ -64,7 +64,7 @@ public class BlockDropItemEventListener implements Listener {
             }
 
             if (doSmelt) {
-                drop = AutoSmelt.smelt(drop, player);
+                drop = AutoSmeltUtils.smelt(drop, player);
             }
 
             HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
