@@ -1,0 +1,70 @@
+name: Build & Release
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+    tags:
+      - '1.*'  # Matches tags like 1.4.7 or 1.4.7-SNAPSHOT
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Determine build version
+        id: versioning
+        run: |
+          REF=${GITHUB_REF#refs/*/}
+          SHORT_SHA=$(git rev-parse --short HEAD)
+
+          if [[ "$GITHUB_REF" == refs/tags/*-SNAPSHOT ]]; then
+            VERSION="$REF"
+            RELEASE_TYPE="prerelease"
+          elif [[ "$GITHUB_REF" == refs/heads/master ]]; then
+            VERSION="$REF"
+            RELEASE_TYPE="release"
+          elif [[ "$GITHUB_REF" == refs/heads/dev ]]; then
+            VERSION="1.4.7-DEVBUILD.${GITHUB_RUN_NUMBER}"
+            RELEASE_TYPE="none"
+          else
+            VERSION="manual-${SHORT_SHA}"
+            RELEASE_TYPE="none"
+          fi
+
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "RELEASE_TYPE=$RELEASE_TYPE" >> $GITHUB_ENV
+
+      - name: Build with Maven
+        run: mvn clean package -Drevision=${{ env.VERSION }}
+
+      - name: Rename output JAR
+        run: |
+          mkdir dist
+          cp target/*.jar dist/AutoPickup-${{ env.VERSION }}.jar
+
+      - name: Upload Dev Build Artifact
+        if: env.RELEASE_TYPE == 'none'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoPickup-${{ env.VERSION }}
+          path: dist/*.jar
+
+      - name: Publish GitHub Release
+        if: env.RELEASE_TYPE != 'none'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: AutoPickup ${{ env.VERSION }}
+          files: dist/AutoPickup-${{ env.VERSION }}.jar
+          prerelease: ${{ env.RELEASE_TYPE == 'prerelease' }}
