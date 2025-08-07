@@ -51,11 +51,19 @@ jobs:
           echo "Building version: $VERSION"
           mvn clean package -Drevision=$VERSION
 
-      - name: 🧹 Rename shaded output JAR
+      - name: 📦 Rename and move JAR to dist/
         run: |
-          mkdir dist
-          SHADED=$(find target -name "*-shaded.jar" | head -n1)
-          cp "$SHADED" "dist/AutoPickup-${{ env.BASE_VERSION }}-DEVBUILD.${{ steps.get-devbuild.outputs.build_num }}.jar"
+          mkdir -p dist
+          JAR=$(find target -name "AutoPickup-*.jar" ! -name "*-original.jar" | head -n1)
+      
+          if [ -z "$JAR" ]; then
+            echo "❌ No JAR found in target/"
+            ls -l target
+            exit 1
+          fi
+      
+          cp "$JAR" "dist/AutoPickup-${{ env.BASE_VERSION }}-DEVBUILD.${{ steps.get-devbuild.outputs.build_num }}.jar"
+
 
       - name: 📥 Upload Dev Build Artifact
         uses: actions/upload-artifact@v4
