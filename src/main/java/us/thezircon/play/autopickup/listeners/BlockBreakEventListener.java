@@ -19,10 +19,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
-import us.thezircon.play.autopickup.utils.HexFormat;
-import us.thezircon.play.autopickup.utils.Mendable;
-import us.thezircon.play.autopickup.utils.PickupObjective;
-import us.thezircon.play.autopickup.utils.TallCrops;
+import us.thezircon.play.autopickup.utils.*;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.database.objects.Island;
 
@@ -44,7 +41,7 @@ public class BlockBreakEventListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
+       SchedulerUtils.runTaskAsynchronously(new Runnable() {
             @Override
             public void run() {
                 boolean requirePermsAUTO = PLUGIN.getConfig().getBoolean("requirePerms.autopickup");
@@ -92,7 +89,7 @@ public class BlockBreakEventListener implements Listener {
 //        }
 
         // AOneBlock Patch
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskLater(player.getLocation(), new FoliaRunnable() {
             @Override
             public void run() {
                 if (AutoPickup.usingBentoBox) {
@@ -143,7 +140,7 @@ public class BlockBreakEventListener implements Listener {
                     }
                 }
             }
-        }.runTaskLater(PLUGIN, 1);
+        }, 1);
 
         // Mend Items & Give Player XP
         boolean usingSilkSpawner = PLUGIN.getConfig().getBoolean("usingSilkSpawnerPlugin");
@@ -494,7 +491,7 @@ public class BlockBreakEventListener implements Listener {
     }
 
     private static void fix(ItemStack item) {
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskLater(null, new FoliaRunnable() {
             @Override
             public void run() {
                 ItemMeta meta = item.getItemMeta();
@@ -502,7 +499,7 @@ public class BlockBreakEventListener implements Listener {
                 damage.setDamage(0);
                 item.setItemMeta(meta);
             }
-        }.runTaskLater(PLUGIN, 1);
+        }, 1);
     }
 
     private static int amt = 1;

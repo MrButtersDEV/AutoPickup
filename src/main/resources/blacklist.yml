@@ -27,6 +27,8 @@ Blacklisted:
 BlacklistedEntities:
   - PLAYER
 
+BlacklistedFishing: []
+
 BlacklistedWorlds:
   - example
 

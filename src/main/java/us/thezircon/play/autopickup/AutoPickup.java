@@ -11,6 +11,7 @@ import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.commands.AutoDrops;
+import us.thezircon.play.autopickup.commands.AutoFishingDrops;
 import us.thezircon.play.autopickup.commands.AutoPickup.Auto;
 import us.thezircon.play.autopickup.commands.AutoSmelt;
 import us.thezircon.play.autopickup.listeners.*;
@@ -28,11 +29,13 @@ public final class AutoPickup extends JavaPlugin {
 
     public HashSet<Player> autopickup_list = new HashSet<>(); // Blocks
     public HashSet<Player> autopickup_list_mobs = new HashSet<>(); // Mobs
+    public HashSet<Player> autopickup_list_fishing = new HashSet<>(); // Fish
     public HashSet<Player> auto_smelt_blocks = new HashSet<>(); // AutoSmelt - Blocks
     public Messages messages = null;
     public boolean UP2Date = true;
     public TallCrops crops;
 
+    public static boolean usingFolia = false; // Folia Support
     public static boolean usingUpgradableHoppers = false; // UpgradableHoppers Patch
     public static boolean usingLocketteProByBrunyman = false; // LockettePro Patch
     public static boolean usingBentoBox = false; // BentoBox - AOneBlock Patch
@@ -59,6 +62,16 @@ public final class AutoPickup extends JavaPlugin {
     public static WeakHashMap<UUID, Long> lastInvFullNotification = new WeakHashMap<>();
 
     private static AutoPickup instance;
+
+    @Override
+    public void onLoad() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.scheduler.RegionScheduler");
+            usingFolia = true;
+        } catch (ClassNotFoundException e) {
+            usingFolia = false;
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -133,6 +146,7 @@ public final class AutoPickup extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityDeathEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDropItemEventListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerFishEventListener(), this);
         getServer().getPluginManager().registerEvents(new ItemSpawnEventListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDropItemEventListener(), this);
 
@@ -144,6 +158,7 @@ public final class AutoPickup extends JavaPlugin {
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
         getCommand("autodrops").setExecutor(new AutoDrops());
+        getCommand("autofishingdrops").setExecutor(new AutoFishingDrops());
         getCommand("autosmelt").setExecutor(new AutoSmelt());
 
         // Crops by version
@@ -173,15 +188,15 @@ public final class AutoPickup extends JavaPlugin {
         }
 
         // Pickup Objective Cleaner
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskTimerAsynchronously(new FoliaRunnable() {
             @Override
             public void run() {
                 customItemPatch.keySet().removeIf(key -> (Duration.between(Instant.now(), customItemPatch.get(key).getCreatedAt()).getSeconds() < -15));
             }
-        }.runTaskTimerAsynchronously(this, 300L, 300L); // 15 sec
+        }, 300L, 300L); // 15 sec
 
         // Dropped items cleaner ****
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskTimer(null, new FoliaRunnable() {
             @Override
             public void run() {
                 try {
@@ -191,7 +206,7 @@ public final class AutoPickup extends JavaPlugin {
                     });
                 } catch (NullPointerException ignored) {}
             }
-        }.runTaskTimer(this, 6000L, 6000L); // 5 min
+        }, 6000L, 6000L); // 5 min
 
         // Load auto smelt cache
         AutoSmeltUtils.loadFurnaceRecipes(smeltRecipeCache);
