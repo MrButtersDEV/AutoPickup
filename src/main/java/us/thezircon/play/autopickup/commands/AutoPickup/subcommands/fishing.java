@@ -8,13 +8,13 @@ import us.thezircon.play.autopickup.commands.CMDManager;
 
 import java.util.List;
 
-public class fishingdrops extends CMDManager {
+public class fishing extends CMDManager {
 
     private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
 
     @Override
     public String getName() {
-        return "fishingdrops";
+        return "fishing";
     }
 
     @Override
@@ -24,7 +24,7 @@ public class fishingdrops extends CMDManager {
 
     @Override
     public String getSyntax() {
-        return "/auto fishingdrops";
+        return "/auto fishing";
     }
 
     @Override
