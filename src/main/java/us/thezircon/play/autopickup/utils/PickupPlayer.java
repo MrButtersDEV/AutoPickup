@@ -91,7 +91,7 @@ public class PickupPlayer {
     }
 
     public void setEnabledFishing(boolean e) {
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskLater(player.getLocation(), new BukkitRunnable() {
             @Override
             public void run() {
                 if (!fileExists()) {createFile();}
@@ -107,7 +107,7 @@ public class PickupPlayer {
                     log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
                 }
             }
-        }.runTaskLater(plugin, 1);
+        }, 1);
     }
 
     public void setEnabledAutoSmelt(boolean e) {
