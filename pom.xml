@@ -13,7 +13,7 @@
 
     <description>Automatically picks up the blocks you mine!</description>
     <properties>
-        <revision>1.4.7-DEVBUILD.4</revision>
+        <revision>1.4.7-DEVBUILD.5</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <url>https://discord.gg/ncHH4FP</url>

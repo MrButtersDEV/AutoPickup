@@ -1,6 +1,5 @@
 package us.thezircon.play.autopickup.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -9,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.utils.SchedulerUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +25,7 @@ public class PlayerFishEventListener implements Listener {
 
         if (!PLUGIN.autopickup_list_fishing.contains(player)) return;
 
-        Bukkit.getScheduler().runTaskAsynchronously(PLUGIN, new Runnable() {
+        SchedulerUtils.runTaskAsynchronously(new Runnable() {
             @Override
             public void run() {
                 boolean requirePermsAUTO = PLUGIN.getConfig().getBoolean("requirePerms.autopickup");
@@ -45,7 +45,7 @@ public class PlayerFishEventListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTask(PLUGIN, () -> {
+        SchedulerUtils.runTask(e.getPlayer().getLocation(), () -> {
             Item caught = (Item) e.getCaught();
 
             if (PLUGIN.getBlacklistConf().contains("BlacklistedFishing", true)) {
