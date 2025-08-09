@@ -13,6 +13,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.utils.FoliaRunnable;
+import us.thezircon.play.autopickup.utils.SchedulerUtils;
 
 import java.util.HashMap;
 
@@ -40,7 +42,7 @@ public class PlayerInteractEventListener implements Listener {
 
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if(e.getClickedBlock().getType() == Material.SWEET_BERRY_BUSH) {
-                new BukkitRunnable() {
+                SchedulerUtils.runTaskLater(loc, new FoliaRunnable() {
                     @Override
                     public void run() {
                         for (Entity entity : loc.getWorld().getNearbyEntities(loc, 1, 1, 1)) {
@@ -66,7 +68,7 @@ public class PlayerInteractEventListener implements Listener {
                             }
                         }
                     }
-                }.runTaskLater(PLUGIN, 1);
+                }, 1);
             }
         }
     }

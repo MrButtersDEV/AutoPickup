@@ -51,7 +51,7 @@ public class PickupPlayer {
     }
 
     public void setEnabled(boolean e) {
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskLater(player.getLocation(), new FoliaRunnable() {
             @Override
             public void run() {
                 if (!fileExists()) {createFile();}
@@ -67,11 +67,11 @@ public class PickupPlayer {
                     log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
                 }
             }
-        }.runTaskLater(plugin, 1);
+        }, 1);
     }
 
     public void setEnabledEntities(boolean e) {
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskLater(player.getLocation(), new FoliaRunnable() {
             @Override
             public void run() {
                 if (!fileExists()) {createFile();}
@@ -87,7 +87,7 @@ public class PickupPlayer {
                     log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
                 }
             }
-        }.runTaskLater(plugin, 1);
+        }, 1);
     }
 
     public void setEnabledFishing(boolean e) {
@@ -111,7 +111,7 @@ public class PickupPlayer {
     }
 
     public void setEnabledAutoSmelt(boolean e) {
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskLater(player.getLocation(), new FoliaRunnable() {
             @Override
             public void run() {
                 if (!fileExists()) {createFile();}
@@ -127,7 +127,7 @@ public class PickupPlayer {
                     log.warning("[AutoPickup] Unable to update "+uuid+"'s data file.");
                 }
             }
-        }.runTaskLater(plugin, 1);
+        }, 1);
     }
 
     public boolean getToggle(){

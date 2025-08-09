@@ -35,6 +35,7 @@ public final class AutoPickup extends JavaPlugin {
     public boolean UP2Date = true;
     public TallCrops crops;
 
+    public static boolean usingFolia = false; // Folia Support
     public static boolean usingUpgradableHoppers = false; // UpgradableHoppers Patch
     public static boolean usingLocketteProByBrunyman = false; // LockettePro Patch
     public static boolean usingBentoBox = false; // BentoBox - AOneBlock Patch
@@ -61,6 +62,16 @@ public final class AutoPickup extends JavaPlugin {
     public static WeakHashMap<UUID, Long> lastInvFullNotification = new WeakHashMap<>();
 
     private static AutoPickup instance;
+
+    @Override
+    public void onLoad() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.scheduler.RegionScheduler");
+            usingFolia = true;
+        } catch (ClassNotFoundException e) {
+            usingFolia = false;
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -177,15 +188,15 @@ public final class AutoPickup extends JavaPlugin {
         }
 
         // Pickup Objective Cleaner
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskTimerAsynchronously(new FoliaRunnable() {
             @Override
             public void run() {
                 customItemPatch.keySet().removeIf(key -> (Duration.between(Instant.now(), customItemPatch.get(key).getCreatedAt()).getSeconds() < -15));
             }
-        }.runTaskTimerAsynchronously(this, 300L, 300L); // 15 sec
+        }, 300L, 300L); // 15 sec
 
         // Dropped items cleaner ****
-        new BukkitRunnable() {
+        SchedulerUtils.runTaskTimer(null, new FoliaRunnable() {
             @Override
             public void run() {
                 try {
@@ -195,7 +206,7 @@ public final class AutoPickup extends JavaPlugin {
                     });
                 } catch (NullPointerException ignored) {}
             }
-        }.runTaskTimer(this, 6000L, 6000L); // 5 min
+        }, 6000L, 6000L); // 5 min
 
         // Load auto smelt cache
         AutoSmeltUtils.loadFurnaceRecipes(smeltRecipeCache);
