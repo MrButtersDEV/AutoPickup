@@ -10,12 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import us.thezircon.play.autopickup.AutoPickup;
+import us.thezircon.play.autopickup.utils.InventoryUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import static us.thezircon.play.autopickup.listeners.BlockBreakEventListener.mend;
 
 public class EntityDeathEventListener implements Listener {
 
@@ -69,23 +68,8 @@ public class EntityDeathEventListener implements Listener {
 
             HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drops);
             iter.remove();
-            if (leftOver.keySet().size()>0) {
-                for (ItemStack item : leftOver.values()) {
-                    player.getWorld().dropItemNaturally(loc, item);
-                }
-                if (doFullInvMSG) {
-                    long secondsLeft;
-                    long cooldown = 15000; // 15 sec
-                    if (AutoPickup.lastInvFullNotification.containsKey(player.getUniqueId())) {
-                        secondsLeft = (AutoPickup.lastInvFullNotification.get(player.getUniqueId())/1000)+ cooldown/1000 - (System.currentTimeMillis()/1000);
-                    } else {
-                        secondsLeft = 0;
-                    }
-                    if (secondsLeft<=0) {
-                        player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
-                        AutoPickup.lastInvFullNotification.put(player.getUniqueId(), System.currentTimeMillis());
-                    }
-                }
+            if (!leftOver.isEmpty()) {
+                InventoryUtils.handleItemOverflow(loc, player, doFullInvMSG, leftOver, PLUGIN);
             }
 
 
@@ -104,18 +88,9 @@ public class EntityDeathEventListener implements Listener {
         // Mend Items & Give Player XP
         if (!PLUGIN.getConfig().getBoolean("ignoreMobXPDrops")) {
             int xp = e.getDroppedExp();
-            player.giveExp(xp); // Give player XP
 
-            // Mend
-            mend(player.getInventory().getItemInMainHand(), xp);
-            mend(player.getInventory().getItemInOffHand(), xp);
-            ItemStack armor[] = player.getInventory().getArmorContents();
-            for (ItemStack i : armor) {
-                try {
-                    mend(i, xp);
-                } catch (NullPointerException ignored) {
-                }
-            }
+            InventoryUtils.applyMending(player, xp);
+
             e.setDroppedExp(0); // Remove default XP
         }
     }

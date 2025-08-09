@@ -1,5 +1,6 @@
 package us.thezircon.play.autopickup;
 
+import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -42,6 +43,8 @@ public final class AutoPickup extends JavaPlugin {
     public static boolean usingEpicFurnaces = false; //EpicFurnaces - Songoda
     public static boolean usingWildChests = false; // WildChests - BG Development
     public static boolean usingMythicMobs = false; // MythicMobs
+    public static boolean usingSSB2OneBlock = false; //SuperiorSkyblock2
+
 
     //public static boolean usingPFHoppers = false; // Play.PeacefulFarms.Net
     //public static boolean usingPFMoreHoppers = false; // Patch for PF
@@ -114,6 +117,13 @@ public final class AutoPickup extends JavaPlugin {
         // MythicMobs
         if ((getServer().getPluginManager().getPlugin("MythicMobs") != null)) {
             usingMythicMobs = true;
+        }
+
+        // SuperiorSkyblock2
+        if ((getServer().getPluginManager().getPlugin("SuperiorSkyblock2") != null)) {
+            if (SuperiorSkyblockAPI.getModules().getModule("OneBlock") != null) {
+                usingSSB2OneBlock = true;
+            }
         }
 
         // Peaceful Farms - Hoppers Patch

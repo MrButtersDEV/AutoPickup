@@ -1,11 +1,9 @@
 package us.thezircon.play.autopickup.listeners;
 
-//import me.crafter.mc.lockettepro.LocketteProAPI;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+
+import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import org.bukkit.*;
 import org.bukkit.block.*;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -15,12 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import us.thezircon.play.autopickup.AutoPickup;
-import us.thezircon.play.autopickup.utils.HexFormat;
-import us.thezircon.play.autopickup.utils.Mendable;
 import us.thezircon.play.autopickup.utils.PickupObjective;
 import us.thezircon.play.autopickup.utils.TallCrops;
 import world.bentobox.bentobox.BentoBox;
@@ -30,6 +24,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import us.thezircon.play.autopickup.utils.InventoryUtils;
 
 public class BlockBreakEventListener implements Listener {
 
@@ -67,7 +63,7 @@ public class BlockBreakEventListener implements Listener {
 
         List<String> blacklist = PLUGIN.getBlacklistConf().getStringList("Blacklisted");
 
-        if (AutoPickup.worldsBlacklist!=null && AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
+        if (AutoPickup.worldsBlacklist != null && AutoPickup.worldsBlacklist.contains(loc.getWorld().getName())) {
             return;
         }
 
@@ -79,7 +75,7 @@ public class BlockBreakEventListener implements Listener {
 
         // QuickShop chest patch
         if (AutoPickup.usingQuickShop) {
-            if(e.toString().startsWith("org.maxgamer.quickshop.util.PermissionChecker")) {
+            if (e.toString().startsWith("org.maxgamer.quickshop.util.PermissionChecker")) {
                 return;
             }
         }
@@ -99,68 +95,43 @@ public class BlockBreakEventListener implements Listener {
                     BentoBox bb = BentoBox.getInstance();
                     if (BentoBox.getInstance().getAddonsManager().getAddonByName("AOneBlock").isPresent()) {
 
-                        if (!bb.getIslands().getIslandAt(loc).isPresent()) { return; }
+                        if (!bb.getIslands().getIslandAt(loc).isPresent()) {
+                            return;
+                        }
 
                         Island island = bb.getIslands().getIslandAt(loc).get();
                         if (island.getCenter().equals(block.getLocation())) {
-                            for (Entity ent : loc.getWorld().getNearbyEntities(block.getLocation().add(0, 1, 0), 1, 1, 1)) {
-                                if (ent instanceof Item) {
-
-                                    HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(((Item) ent).getItemStack());
-                                    ent.remove();
-                                    if (leftOver.keySet().size()>0) {
-                                        for (ItemStack item : leftOver.values()) {
-                                            player.getWorld().dropItemNaturally(loc, item);
-                                        }
-                                        if (doFullInvMSG) {
-                                            long secondsLeft;
-                                            long cooldown = 15000; // 15 sec
-                                            if (AutoPickup.lastInvFullNotification.containsKey(player.getUniqueId())) {
-                                                secondsLeft = (AutoPickup.lastInvFullNotification.get(player.getUniqueId())/1000)+ cooldown/1000 - (System.currentTimeMillis()/1000);
-                                            } else {
-                                                secondsLeft = 0;
-                                            }
-                                            if (secondsLeft<=0) {
-                                                player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
-                                                AutoPickup.lastInvFullNotification.put(player.getUniqueId(), System.currentTimeMillis());
-                                            }
-                                        }
-                                    }
-
-//                                    if (player.getInventory().firstEmpty() == -1) { // Checks for inventory space
-//                                        //Player has no space
-//                                        if (doFullInvMSG) {
-//                                            player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getFullInventory());
-//                                        }
-//                                        return;
-//                                    } else {
-//                                        player.getInventory().addItem(((Item) ent).getItemStack());
-//                                        ent.remove();
-//                                    }
-                                }
-                            }
+                            oneBlockAutoPickup(loc, block, player, doFullInvMSG);
                         }
                     }
                 }
             }
         }.runTaskLater(PLUGIN, 1);
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!AutoPickup.usingSSB2OneBlock) return;
+
+                com.bgsoftware.superiorskyblock.api.island.Island island = SuperiorSkyblockAPI.getIslandAt(player.getLocation());
+
+                if(island == null) return;
+
+                Location oneBlockLocation = island.getCenter(SuperiorSkyblockAPI.getSettings().getWorlds().getDefaultWorldDimension()).subtract(0.5F,1.0F,0.5F);
+
+                if (!oneBlockLocation.equals(block.getLocation())) return;
+
+                oneBlockAutoPickup(loc, block, player, doFullInvMSG);
+            }
+        }.runTaskLater(PLUGIN, 1);
+
         // Mend Items & Give Player XP
         boolean usingSilkSpawner = PLUGIN.getConfig().getBoolean("usingSilkSpawnerPlugin");
-        if (!usingSilkSpawner || !(block.getType()==Material.SPAWNER)) {
+        if (!usingSilkSpawner || !(block.getType() == Material.SPAWNER)) {
             int xp = e.getExpToDrop();
-            player.giveExp(xp); // Give player XP
 
-            // Mend
-            mend(player.getInventory().getItemInMainHand(), xp);
-            mend(player.getInventory().getItemInOffHand(), xp);
-            ItemStack armor[] = player.getInventory().getArmorContents();
-            for (ItemStack i : armor)
-            {
-                try {
-                    mend(i, xp);
-                } catch (NullPointerException ignored) {}
-            }
+            InventoryUtils.applyMending(player, xp);
+
             e.setExpToDrop(0); // Remove default XP
         }
 
@@ -200,7 +171,7 @@ public class BlockBreakEventListener implements Listener {
 
             // WildChests patch
             if (AutoPickup.usingWildChests) {
-                if (block.getType()==Material.CHEST) {
+                if (block.getType() == Material.CHEST) {
                     return;
                 }
             }
@@ -212,26 +183,26 @@ public class BlockBreakEventListener implements Listener {
                 org.bukkit.block.data.type.Chest chestType = (org.bukkit.block.data.type.Chest) chest.getBlockData();
                 ArrayList<ItemStack> chestDrops = new ArrayList<>();
                 if (chestType.getType().equals(org.bukkit.block.data.type.Chest.Type.RIGHT)) { // Right
-                    for (int x=0; x<27; x++) {
+                    for (int x = 0; x < 27; x++) {
                         chestDrops.add(chest.getInventory().getItem(x));
                         chest.getInventory().setItem(x, null);
                     }
                 } else if (chestType.getType().equals(org.bukkit.block.data.type.Chest.Type.LEFT)) {
-                    for (int x=27; x<54; x++) {
+                    for (int x = 27; x < 54; x++) {
                         chestDrops.add(chest.getInventory().getItem(x));
                         chest.getInventory().setItem(x, null);
                     }
                 }
 
                 for (ItemStack items : chestDrops) {
-                    if (items!=null) {
+                    if (items != null) {
 //                        if (player.getInventory().firstEmpty()!=-1) {
 //                            player.getInventory().add----Item(items);
 //                        } else {
 //                            player.getWorld().dropItemNaturally(loc, items);
 //                        }
                         HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(items);
-                        if (leftOver.keySet().size()>0) {
+                        if (leftOver.keySet().size() > 0) {
                             for (ItemStack item : leftOver.values()) {
                                 player.getWorld().dropItemNaturally(loc, item);
                             }
@@ -242,14 +213,9 @@ public class BlockBreakEventListener implements Listener {
             } else {
                 for (ItemStack items : ((Container) e.getBlock().getState()).getInventory().getContents()) {
 
-                    if (items!=null) {
-//                        if (player.getInventory().firstEmpty()!=-1) {
-//                            player.getInventory().add----Item(items);
-//                        } else {
-//                            player.getWorld().dropItemNaturally(loc, items);
-//                        }
+                    if (items != null) {
                         HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(items);
-                        if (leftOver.keySet().size()>0) {
+                        if (leftOver.keySet().size() > 0) {
                             for (ItemStack item : leftOver.values()) {
                                 player.getWorld().dropItemNaturally(loc, item);
                             }
@@ -262,29 +228,16 @@ public class BlockBreakEventListener implements Listener {
 
             // EpicFurnaces patch
             if (AutoPickup.usingEpicFurnaces) {
-                if (block.getType()==Material.FURNACE || block.getType()==Material.BLAST_FURNACE || block.getType()==Material.SMOKER) {
+                if (block.getType() == Material.FURNACE || block.getType() == Material.BLAST_FURNACE || block.getType() == Material.SMOKER) {
                     return;
                 }
             }
-
-//            if (player.getInventory().firstEmpty()!=-1) {
-//                player.getInventory().add---Item(drop);
-//            } else {
-//                player.getWorld().dropItemNaturally(loc, drop);
-//            }
-//            ItemStack drop = new ItemStack(e.getBlock().getType());
-//            HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
-//            if (leftOver.keySet().size()>0) {
-//                for (ItemStack item : leftOver.values()) {
-//                    player.getWorld().dropItemNaturally(loc, item);
-//                }
-//            }
 
             return;
         }
 
         ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
+        String key = loc.getBlockX() + ";" + loc.getBlockY() + ";" + loc.getBlockZ() + ";" + loc.getWorld();
         AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
         ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -296,14 +249,13 @@ public class BlockBreakEventListener implements Listener {
         Location l = e.getBlock().getLocation();
         //Deal with kelp
 
-        if(e.getBlock().getType() == Material.KELP_PLANT || e.getBlock().getType().equals(Material.KELP) || e.getBlock().getType() == Material.BAMBOO) {
+        if (e.getBlock().getType() == Material.KELP_PLANT || e.getBlock().getType().equals(Material.KELP) || e.getBlock().getType() == Material.BAMBOO) {
             Location lnew = l.clone();
             do {
-                lnew.setY(lnew.getY()+1);
-                if(lnew.getBlock().getType() == Material.KELP_PLANT || lnew.getBlock().getType().equals(Material.KELP) || lnew.getBlock().getType() == Material.BAMBOO) {
+                lnew.setY(lnew.getY() + 1);
+                if (lnew.getBlock().getType() == Material.KELP_PLANT || lnew.getBlock().getType().equals(Material.KELP) || lnew.getBlock().getType() == Material.BAMBOO) {
                     addLocation(lnew, e.getPlayer());
-                }
-                else {
+                } else {
                     break;
                 }
             } while (true);
@@ -339,11 +291,11 @@ public class BlockBreakEventListener implements Listener {
 
         if (
                 Bukkit.getVersion().contains("1.16") ||
-                Bukkit.getVersion().contains("1.17") ||
-                Bukkit.getVersion().contains("1.18") ||
-                Bukkit.getVersion().contains("1.19") ||
-                Bukkit.getVersion().contains("1.20") ||
-                Bukkit.getVersion().contains("1.21")
+                        Bukkit.getVersion().contains("1.17") ||
+                        Bukkit.getVersion().contains("1.18") ||
+                        Bukkit.getVersion().contains("1.19") ||
+                        Bukkit.getVersion().contains("1.20") ||
+                        Bukkit.getVersion().contains("1.21")
         ) {
             //deal with weeping vines
             if (e.getBlock().getType() == Material.WEEPING_VINES_PLANT || e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.WEEPING_VINES_PLANT) {
@@ -395,7 +347,7 @@ public class BlockBreakEventListener implements Listener {
                 addLocation(lnew, e.getPlayer());
             }
 
-            if(!Bukkit.getVersion().contains("1.16")) {
+            if (!Bukkit.getVersion().contains("1.16")) {
                 //deal with glow berries
                 if (e.getBlock().getType() == Material.CAVE_VINES_PLANT || e.getBlock().getRelative(BlockFace.DOWN).getType() == Material.CAVE_VINES_PLANT) {
                     Location lnew = l.clone();
@@ -466,47 +418,21 @@ public class BlockBreakEventListener implements Listener {
 
     }
 
-    public static int mend(ItemStack item, int xp) {
-
-        if (item.containsEnchantment(Enchantment.MENDING)) {
-            ItemMeta meta = item.getItemMeta();
-            Mendable mend[] = Mendable.values();
-            for (Mendable m : mend) {
-
-                if (item.equals(null)) {
-                    continue;
-                }
-
-                if (item.getType().toString().equals(m.toString())) {
-                    Damageable damage = (Damageable) meta;
-                    int min = Math.min(xp, damage.getDamage());
-                    if ((damage.getDamage() - min==0) && damage.hasDamage()) {
-                        fix(item);
-                    } else {
-                        damage.setDamage(damage.getDamage() - min);
-                    }
-                    xp -= min;
-                    item.setItemMeta(meta);
+    private void oneBlockAutoPickup(Location loc, Block block, Player player, boolean doFullInvMSG) {
+        for (Entity ent : loc.getWorld().getNearbyEntities(block.getLocation().add(0, 1, 0), 1, 1, 1)) {
+            if (ent instanceof Item) {
+                HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(((Item) ent).getItemStack());
+                ent.remove();
+                if (!leftOver.isEmpty()) {
+                    InventoryUtils.handleItemOverflow(loc, player, doFullInvMSG, leftOver, PLUGIN);
                 }
             }
         }
-        return xp;
-    }
-
-    private static void fix(ItemStack item) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                ItemMeta meta = item.getItemMeta();
-                Damageable damage = (Damageable) meta;
-                damage.setDamage(0);
-                item.setItemMeta(meta);
-            }
-        }.runTaskLater(PLUGIN, 1);
     }
 
     private static int amt = 1;
     private static Material type;
+
     private static void vertBreak(Player player, Location loc) {
         TallCrops crops = PLUGIN.getCrops();
         ArrayList<Material> verticalReq = crops.getVerticalReq();
@@ -519,16 +445,16 @@ public class BlockBreakEventListener implements Listener {
         //Bukkit.getPluginManager().callEvent(new BlockBreakEvent(loc.getBlock().getWorld().getBlockAt(loc), player)); //////
 
         //System.out.println(loc.clone().add(0,1,0).getBlock().getType() + " | " + loc.toString());
-        if (verticalReq.contains(loc.add(0,1,0).getBlock().getType())) {
+        if (verticalReq.contains(loc.add(0, 1, 0).getBlock().getType())) {
             amt++;
             vertBreak(player, loc);
-        } else if (verticalReqDown.contains(loc.subtract(0,2,0).getBlock().getType())) {
+        } else if (verticalReqDown.contains(loc.subtract(0, 2, 0).getBlock().getType())) {
             amt++;
             vertBreak(player, loc);
         } else {
             ItemStack drop = new ItemStack(type, amt);
             HashMap<Integer, ItemStack> leftOver = player.getInventory().addItem(drop);
-            if (leftOver.keySet().size()>0) {
+            if (leftOver.keySet().size() > 0) {
                 for (ItemStack item : leftOver.values()) {
                     player.getWorld().dropItemNaturally(loc, item);
                 }
@@ -541,8 +467,8 @@ public class BlockBreakEventListener implements Listener {
             type = null;
             amt = 1;
             ///////////////////////////////////// Custom items \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-            loc.add(0,1,0);
-            String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
+            loc.add(0, 1, 0);
+            String key = loc.getBlockX() + ";" + loc.getBlockY() + ";" + loc.getBlockZ() + ";" + loc.getWorld();
             AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
             ///////////////////////////////////////////////////////////////////////////////////////
         }
@@ -550,7 +476,7 @@ public class BlockBreakEventListener implements Listener {
     }
 
     private void addLocation(Location loc, Player player) {
-        String key = loc.getBlockX()+";"+loc.getBlockY()+";"+loc.getBlockZ()+";"+loc.getWorld();
+        String key = loc.getBlockX() + ";" + loc.getBlockY() + ";" + loc.getBlockZ() + ";" + loc.getWorld();
         AutoPickup.customItemPatch.put(key, new PickupObjective(loc, player, Instant.now()));
     }
 

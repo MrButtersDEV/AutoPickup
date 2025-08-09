@@ -6,7 +6,7 @@ authors: [BUTTERFIELD8]
 description: Automatically pickup broken blocks.
 website: https://discord.gg/ncHH4FP
 api-version: 1.13
-softdepend: [BentoBox, LockettePro, UpgradeableHoppers, PlaceholderAPI, Jobs, MythicMobs]
+softdepend: [SuperiorSkyblock2, BentoBox, LockettePro, UpgradeableHoppers, PlaceholderAPI, Jobs, MythicMobs]
 commands:
   autopickup:
     description: Toggles the ability to automaticly pickup blocks when you mine them.
