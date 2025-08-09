@@ -59,6 +59,13 @@ public class PlayerJoinEventListener implements Listener{
             }
         }
 
+        if (player.hasPermission("autopickup.pickup.fishing.autoenabled")) {
+            if (!PLUGIN.autopickup_list_fishing.contains(player)) {
+                PLUGIN.autopickup_list_fishing.add(player);
+                //if (doAutoEnableMSG) {player.sendMessage(PLUGIN.getMsg().getPrefix() + " " + PLUGIN.getMsg().getAutoEnabled());}
+            }
+        }
+
         if (player.hasPermission("autopickup.pickup.mined.autosmelt.autoenabled")) {
             if (!PLUGIN.auto_smelt_blocks.contains(player)) {
                 PLUGIN.auto_smelt_blocks.add(player);
@@ -81,6 +88,11 @@ public class PlayerJoinEventListener implements Listener{
         if (PP.getMobDropsToggle() && player.hasPermission("autopickup.pickup.entities")) {
             if (!PLUGIN.autopickup_list_mobs.contains(player)) {
                 PLUGIN.autopickup_list_mobs.add(player);
+            }
+        }
+        if (PP.getFishDropsToggle() && player.hasPermission("autopickup.pickup.fishing")) {
+            if (!PLUGIN.autopickup_list_fishing.contains(player)) {
+                PLUGIN.autopickup_list_fishing.add(player);
             }
         }
     }
