@@ -26,24 +26,19 @@ jobs:
           echo "BASE_VERSION=${BASE_VERSION%%-DEVBUILD*}" >> $GITHUB_ENV
           echo "base_version=${BASE_VERSION%%-DEVBUILD*}" >> $GITHUB_OUTPUT
 
-      - name: 🔢 Get last dev build number
+      - name: 🔢 Get dev build number from commit count
         id: get-devbuild
         run: |
-          VERSION_FILE=".github/devbuild-count.txt"
-          VERSION="${{ steps.version.outputs.base_version }}"
-          mkdir -p .github
-          touch "$VERSION_FILE"
-
-          CURRENT=$(grep "^$VERSION=" "$VERSION_FILE" | cut -d= -f2)
-          if [ -z "$CURRENT" ]; then
-            CURRENT=1
+          LAST_TAG=$(git describe --tags --match "${{ env.BASE_VERSION }}*" --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            BUILD_NUM=$(git rev-list --count "$LAST_TAG"..HEAD)
           else
-            CURRENT=$((CURRENT + 1))
+            BUILD_NUM=$(git rev-list --count HEAD)
           fi
 
-          echo "$VERSION=$CURRENT" > "$VERSION_FILE"
-          echo "DEVBUILD=$CURRENT" >> $GITHUB_ENV
-          echo "build_num=$CURRENT" >> $GITHUB_OUTPUT
+          echo "DEVBUILD=$BUILD_NUM" >> $GITHUB_ENV
+          echo "build_num=$BUILD_NUM" >> $GITHUB_OUTPUT
+
 
       - name: 🛠 Build with Maven
         run: |
