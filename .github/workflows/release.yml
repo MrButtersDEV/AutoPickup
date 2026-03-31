@@ -37,8 +37,7 @@ jobs:
       - name: 📝 Generate Changelog
         id: changelog
         run: |
-          # Gets commits between the last two tags, or all commits if no tags exist
-          # Formats as: hash message - author
+          # Gets the last 10 commits formatted as: hash message - author
           CHANGELOG=$(git log --pretty=format:"%h %s - %an" -n 10)
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           echo "$CHANGELOG" >> $GITHUB_OUTPUT
@@ -59,10 +58,11 @@ jobs:
           cp "$JAR" "dist/AutoPickup-${{ env.VERSION }}.jar"
 
       - name: 📥 Upload to Modrinth
-        uses: modrinth/minotaur@2.8.7
+        # Using the specific commit hash for v2.8.7 to ensure resolution
+        uses: modrinth/minotaur@d701509312117565922378f845d430030e46639d
         with:
-          token: ${{ secrets.MODRINTH_TOKEN }} # You must add this to GitHub Secrets
-          project-id: "oB3hT7d7"        # Your Modrinth Project ID
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project-id: "oB3hT7d7"
           version-number: ${{ env.VERSION }}
           version-name: "AutoPickup ${{ env.VERSION }}"
           version-type: "release"
@@ -79,5 +79,5 @@ jobs:
       - name: 📥 Upload Artifact to GitHub
         uses: actions/upload-artifact@v4
         with:
-          name: AutoPickup-${{ env.VERSION }}
+          name: AutoPickup-${{ env.VERSION }}-RELEASE
           path: dist/*.jar
