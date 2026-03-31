@@ -1,9 +1,13 @@
-name: Release Build
+name: Dev Build
 
 on:
   push:
     branches:
-      - master
+      - dev
+
+# Opt into Node.js 24 for all actions in this workflow to resolve deprecation warnings
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -20,35 +24,41 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: 🏷 Get Version from pom.xml
+      - name: 🏷 Get and Clean Base Version
         id: version
         run: |
-          # Extracts the version defined in <version> or <revision> property
-          PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-          echo "version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
+          # 1. Get raw version from pom (e.g., 1.4.7 or 1.4.7-DEVBUILD.4)
+          RAW_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          
+          # 2. Strip any existing tags to get the clean base (e.g., 1.4.7)
+          CLEAN_VERSION=$(echo $RAW_VERSION | cut -d'-' -f1)
+          
+          # 3. Create the new Dev version using GitHub's built-in run number
+          DEV_VERSION="${CLEAN_VERSION}-DEVBUILD.${{ github.run_number }}"
+          
+          echo "BASE_VERSION=$CLEAN_VERSION" >> $GITHUB_ENV
+          echo "FINAL_VERSION=$DEV_VERSION" >> $GITHUB_ENV
+          echo "version=$DEV_VERSION" >> $GITHUB_OUTPUT
 
-      - name: 🛠 Build Production JAR
+      - name: 🛠 Build with Maven
         run: |
-          echo "Building Release version: ${{ env.VERSION }}"
-          mvn clean package -Drevision=${{ env.VERSION }}
+          echo "Building Development version: ${{ env.FINAL_VERSION }}"
+          mvn clean package -Drevision=${{ env.FINAL_VERSION }}
 
-      - name: 📦 Prepare Release Artifacts
+      - name: 📦 Prepare Dev Artifacts
         run: |
           mkdir -p dist
-          # Find the main JAR (excluding original/shaded duplicates if they exist)
-          JAR=$(find target -name "AutoPickup-${{ env.VERSION }}.jar" | head -n1)
+          JAR=$(find target -name "AutoPickup-${{ env.FINAL_VERSION }}.jar" | head -n1)
           
           if [ -z "$JAR" ]; then
-            echo "❌ Expected JAR target/AutoPickup-${{ env.VERSION }}.jar not found"
-            ls -l target
+            echo "❌ No JAR found for version ${{ env.FINAL_VERSION }}"
             exit 1
           fi
           
-          cp "$JAR" "dist/AutoPickup-${{ env.VERSION }}.jar"
+          cp "$JAR" "dist/AutoPickup-${{ env.FINAL_VERSION }}.jar"
 
-      - name: 📥 Upload Release Artifact
+      - name: 📥 Upload Dev Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AutoPickup-${{ env.VERSION }}-RELEASE
+          name: AutoPickup-${{ env.FINAL_VERSION }}
           path: dist/*.jar
