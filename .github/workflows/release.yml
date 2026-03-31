@@ -5,7 +5,7 @@ on:
     branches:
       - master
 
-# Resolve Node.js 20 deprecation warnings by opting into the Node 24 runner
+# Suppress Node.js 20 deprecation warnings by explicitly opting into Node 24
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -16,50 +16,68 @@ jobs:
     steps:
       - name: 📦 Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to generate a changelog from git history
 
       - name: ☕ Set up Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
-          cache: 'maven' # Speeds up builds by caching dependencies
+          cache: 'maven'
 
       - name: 🏷 Get and Clean Version from pom.xml
         id: version
         run: |
-          # 1. Extract the raw version (e.g., 1.4.7-DEVBUILD.4 or 1.4.7)
           RAW_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          
-          # 2. Cleaning logic: strip everything after the first hyphen
-          # This converts "1.4.7-DEVBUILD.4" -> "1.4.7"
           CLEAN_VERSION=$(echo $RAW_VERSION | cut -d'-' -f1)
-          
           echo "VERSION=$CLEAN_VERSION" >> $GITHUB_ENV
           echo "version=$CLEAN_VERSION" >> $GITHUB_OUTPUT
-          echo "✅ Detected Raw: $RAW_VERSION -> Cleaned for Release: $CLEAN_VERSION"
+
+      - name: 📝 Generate Changelog
+        id: changelog
+        run: |
+          # Gets commits between the last two tags, or all commits if no tags exist
+          # Formats as: hash message - author
+          CHANGELOG=$(git log --pretty=format:"%h %s - %an" -n 10)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: 🛠 Build Production JAR
         run: |
-          # Use -Drevision to force the clean version into the final JAR name
-          echo "Building Release version: ${{ env.VERSION }}"
           mvn clean package -Drevision=${{ env.VERSION }}
 
       - name: 📦 Prepare Release Artifacts
         run: |
           mkdir -p dist
-          # Find the JAR matching the clean version
           JAR=$(find target -name "AutoPickup-${{ env.VERSION }}.jar" | head -n1)
-          
           if [ -z "$JAR" ]; then
-            echo "❌ Expected JAR target/AutoPickup-${{ env.VERSION }}.jar not found"
-            ls -l target
+            echo "❌ JAR not found"
             exit 1
           fi
-          
           cp "$JAR" "dist/AutoPickup-${{ env.VERSION }}.jar"
 
-      - name: 📥 Upload Release Artifact
+      - name: 📥 Upload to Modrinth
+        uses: modrinth/minotaur@v3
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }} # You must add this to GitHub Secrets
+          project-id: "oB3hT7d7"        # Replace with your Modrinth Project ID or Slug
+          version-number: ${{ env.VERSION }}
+          version-name: "AutoPickup ${{ env.VERSION }}"
+          version-type: "release"
+          changelog: ${{ steps.changelog.outputs.changelog }}
+          loaders: |
+            paper
+            purpur
+            spigot
+          game-versions: |
+            1.21
+            1.21.1
+          files: dist/*.jar
+
+      - name: 📥 Upload Artifact to GitHub
         uses: actions/upload-artifact@v4
         with:
-          name: AutoPickup-${{ env.VERSION }}-RELEASE
+          name: AutoPickup-${{ env.VERSION }}
           path: dist/*.jar
