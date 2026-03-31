@@ -1,11 +1,11 @@
-name: Dev Build
+name: Release Build
 
 on:
   push:
     branches:
-      - dev
+      - master
 
-# Opt into Node.js 24 for all actions in this workflow to resolve deprecation warnings
+# Suppress Node.js 20 deprecation warnings by explicitly opting into Node 24
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: 📦 Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to generate a changelog from git history
 
       - name: ☕ Set up Java 21
         uses: actions/setup-java@v4
@@ -24,41 +26,58 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: 🏷 Get and Clean Base Version
+      - name: 🏷 Get and Clean Version from pom.xml
         id: version
         run: |
-          # 1. Get raw version from pom (e.g., 1.4.7 or 1.4.7-DEVBUILD.4)
           RAW_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          
-          # 2. Strip any existing tags to get the clean base (e.g., 1.4.7)
           CLEAN_VERSION=$(echo $RAW_VERSION | cut -d'-' -f1)
-          
-          # 3. Create the new Dev version using GitHub's built-in run number
-          DEV_VERSION="${CLEAN_VERSION}-DEVBUILD.${{ github.run_number }}"
-          
-          echo "BASE_VERSION=$CLEAN_VERSION" >> $GITHUB_ENV
-          echo "FINAL_VERSION=$DEV_VERSION" >> $GITHUB_ENV
-          echo "version=$DEV_VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$CLEAN_VERSION" >> $GITHUB_ENV
+          echo "version=$CLEAN_VERSION" >> $GITHUB_OUTPUT
 
-      - name: 🛠 Build with Maven
+      - name: 📝 Generate Changelog
+        id: changelog
         run: |
-          echo "Building Development version: ${{ env.FINAL_VERSION }}"
-          mvn clean package -Drevision=${{ env.FINAL_VERSION }}
+          # Gets commits between the last two tags, or all commits if no tags exist
+          # Formats as: hash message - author
+          CHANGELOG=$(git log --pretty=format:"%h %s - %an" -n 10)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: 📦 Prepare Dev Artifacts
+      - name: 🛠 Build Production JAR
+        run: |
+          mvn clean package -Drevision=${{ env.VERSION }}
+
+      - name: 📦 Prepare Release Artifacts
         run: |
           mkdir -p dist
-          JAR=$(find target -name "AutoPickup-${{ env.FINAL_VERSION }}.jar" | head -n1)
-          
+          JAR=$(find target -name "AutoPickup-${{ env.VERSION }}.jar" | head -n1)
           if [ -z "$JAR" ]; then
-            echo "❌ No JAR found for version ${{ env.FINAL_VERSION }}"
+            echo "❌ JAR not found"
             exit 1
           fi
-          
-          cp "$JAR" "dist/AutoPickup-${{ env.FINAL_VERSION }}.jar"
+          cp "$JAR" "dist/AutoPickup-${{ env.VERSION }}.jar"
 
-      - name: 📥 Upload Dev Build Artifact
+      - name: 📥 Upload to Modrinth
+        uses: modrinth/minotaur@v3
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }} # You must add this to GitHub Secrets
+          project-id: "oB3hT7d7"        # Replace with your Modrinth Project ID or Slug
+          version-number: ${{ env.VERSION }}
+          version-name: "AutoPickup ${{ env.VERSION }}"
+          version-type: "release"
+          changelog: ${{ steps.changelog.outputs.changelog }}
+          loaders: |
+            paper
+            purpur
+            spigot
+          game-versions: |
+            1.21
+            1.21.1
+          files: dist/*.jar
+
+      - name: 📥 Upload Artifact to GitHub
         uses: actions/upload-artifact@v4
         with:
-          name: AutoPickup-${{ env.FINAL_VERSION }}
+          name: AutoPickup-${{ env.VERSION }}
           path: dist/*.jar
