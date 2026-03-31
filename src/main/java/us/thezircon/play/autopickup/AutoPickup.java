@@ -158,7 +158,7 @@ public final class AutoPickup extends JavaPlugin {
         // Commands
         getCommand("autopickup").setExecutor(new Auto());
         getCommand("autodrops").setExecutor(new AutoDrops());
-        getCommand("autofishingdrops").setExecutor(new AutoFishingDrops());
+        getCommand("autofish").setExecutor(new AutoFishingDrops());
         getCommand("autosmelt").setExecutor(new AutoSmelt());
 
         // Crops by version

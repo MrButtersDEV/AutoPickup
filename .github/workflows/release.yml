@@ -1,0 +1,54 @@
+name: Release Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: 🏷 Get Version from pom.xml
+        id: version
+        run: |
+          # Extracts the version defined in <version> or <revision> property
+          PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          echo "version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: 🛠 Build Production JAR
+        run: |
+          echo "Building Release version: ${{ env.VERSION }}"
+          mvn clean package -Drevision=${{ env.VERSION }}
+
+      - name: 📦 Prepare Release Artifacts
+        run: |
+          mkdir -p dist
+          # Find the main JAR (excluding original/shaded duplicates if they exist)
+          JAR=$(find target -name "AutoPickup-${{ env.VERSION }}.jar" | head -n1)
+          
+          if [ -z "$JAR" ]; then
+            echo "❌ Expected JAR target/AutoPickup-${{ env.VERSION }}.jar not found"
+            ls -l target
+            exit 1
+          fi
+          
+          cp "$JAR" "dist/AutoPickup-${{ env.VERSION }}.jar"
+
+      - name: 📥 Upload Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoPickup-${{ env.VERSION }}-RELEASE
+          path: dist/*.jar
