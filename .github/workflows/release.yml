@@ -59,7 +59,7 @@ jobs:
           cp "$JAR" "dist/AutoPickup-${{ env.VERSION }}.jar"
 
       - name: 📥 Upload to Modrinth
-        uses: modrinth/minotaur@v3
+        uses: modrinth/minotaur@v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }} # You must add this to GitHub Secrets
           project-id: "oB3hT7d7"        # Replace with your Modrinth Project ID or Slug
@@ -79,5 +79,5 @@ jobs:
       - name: 📥 Upload Artifact to GitHub
         uses: actions/upload-artifact@v4
         with:
-          name: AutoPickup-${{ env.VERSION }}
+          name: AutoPickup-${{ env.VERSION }}-RELEASE
           path: dist/*.jar
