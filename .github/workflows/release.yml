@@ -59,10 +59,10 @@ jobs:
           cp "$JAR" "dist/AutoPickup-${{ env.VERSION }}.jar"
 
       - name: 📥 Upload to Modrinth
-        uses: modrinth/minotaur@v2
+        uses: modrinth/minotaur@v2.8.7
         with:
           token: ${{ secrets.MODRINTH_TOKEN }} # You must add this to GitHub Secrets
-          project-id: "oB3hT7d7"        # Replace with your Modrinth Project ID or Slug
+          project-id: "oB3hT7d7"        # Your Modrinth Project ID
           version-number: ${{ env.VERSION }}
           version-name: "AutoPickup ${{ env.VERSION }}"
           version-type: "release"
