@@ -9,6 +9,7 @@ import us.thezircon.play.autopickup.AutoPickup;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PickupPlayer {
@@ -36,11 +37,7 @@ public class PickupPlayer {
                playerData.createNewFile();
            } catch (IOException err) {
                log.warning("[AutoPickup] Unable to create playdata file for "+uuid);
-               // Dev Build
-               log.severe("[AutoPickup] Cuase: "+err.getCause());
-               System.out.println("");
-               err.printStackTrace();
-               ////////////
+               log.log(Level.SEVERE, "[AutoPickup] Cause: " + err.getMessage(), err);
            }
         }
     }

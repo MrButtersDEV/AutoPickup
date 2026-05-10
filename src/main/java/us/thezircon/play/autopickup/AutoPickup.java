@@ -24,6 +24,7 @@ import java.net.UnknownHostException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.logging.Level;
 
 public final class AutoPickup extends JavaPlugin {
 
@@ -177,7 +178,7 @@ public final class AutoPickup extends JavaPlugin {
                 } catch (UnknownHostException e) {
                     VersionChk.noConnection();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    getLogger().log(Level.SEVERE, "Failed to check plugin version.", e);
                 }
             }
         }.run();
@@ -239,7 +240,7 @@ public final class AutoPickup extends JavaPlugin {
         try {
             confBlacklist.load(fileBlacklist);
         } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "Failed to load blacklist.yml.", e);
         }
     }
 
@@ -266,7 +267,7 @@ public final class AutoPickup extends JavaPlugin {
         try {
             confPAPI.load(filePAPI);
         } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, "Failed to load papi.yml.", e);
         }
     }
 

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
 
 import static us.thezircon.play.autopickup.AutoPickup.usingFolia;
 
@@ -109,7 +110,7 @@ public abstract class SchedulerUtils {
                 }
                 new AsyncRepeatingTask().start(delay);
             } catch (Exception e) {
-                e.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "Failed to schedule async repeating task.", e);
             }
             return;
         }
@@ -125,7 +126,7 @@ public abstract class SchedulerUtils {
                 globalScheduler.execute(plugin, task);
                 return;
             } catch (Exception e) {
-                e.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "Failed to schedule async task.", e);
             }
         }
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, task);
@@ -149,7 +150,7 @@ public abstract class SchedulerUtils {
                 }
                 return;
             } catch (Exception e) {
-                e.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "Failed to schedule task.", e);
             }
         }
 

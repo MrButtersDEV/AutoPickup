@@ -2,6 +2,8 @@ package us.thezircon.play.autopickup.utils;
 
 import us.thezircon.play.autopickup.AutoPickup;
 
+import java.util.logging.Level;
+
 public class Messages {
 
     private static final AutoPickup PLUGIN = AutoPickup.getPlugin(AutoPickup.class);
@@ -103,7 +105,7 @@ public class Messages {
                 System.out.println("----------------------------------");
                 System.out.println("Check the default config on spigot!");
             }
-            e.printStackTrace();
+            PLUGIN.getLogger().log(Level.SEVERE, "Failed to load message keys from config.yml.", e);
         }
     }
 
